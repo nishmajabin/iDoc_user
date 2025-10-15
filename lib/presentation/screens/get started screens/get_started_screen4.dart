@@ -1,0 +1,124 @@
+import 'package:flutter/material.dart';
+import 'package:second_project/presentation/screens/get%20started%20screens/welcome_screen.dart';
+import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_container.dart';
+import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_image_container.dart';
+import 'package:second_project/presentation/screens/get%20started%20screens/widgets/positioned_container.dart';
+
+class GetStartedScreen4 extends StatelessWidget {
+  const GetStartedScreen4({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: customContainer(
+        child: Stack(
+          children: [
+            positionedLeft(),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final contentHeight = constraints.maxHeight;
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: contentHeight),
+                    child: SafeArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(height: screenHeight * 0.08),
+                              customImageContainer(imagePath: 'assets/images/doctor_appointment.jpg'),
+                              SizedBox(height: screenHeight * 0.08),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 40.0),
+                                child: Text(
+                                  'Easy Appointments',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF052C40),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 40.0),
+                                child: Text(
+                                  'Book your visit in seconds, not minutes. Access real-time availability and schedule your next appointment at your convenience, 24/7.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFF677294),
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40.0,
+                              vertical: 15.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => WelcomeScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Skip',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xFF052C40),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF052C40),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => WelcomeScreen(),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.arrow_forward,
+                                      color: Color(0xFF6AD2FF),
+                                      size: 22,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
