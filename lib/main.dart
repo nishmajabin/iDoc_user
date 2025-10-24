@@ -2,10 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_project/firebase_options.dart';
+import 'package:second_project/logic/blocs/auth/email/sign%20in/sign_in_bloc.dart';
+import 'package:second_project/logic/blocs/auth/email/sign%20up/sign_up_bloc.dart';
+import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_bloc.dart';
+import 'package:second_project/logic/blocs/profile/profile_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_event.dart';
 import 'package:second_project/presentation/screens/splash/splash_screen.dart';
-
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +23,11 @@ class StudentApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context)=> SplashBloc()..add(StartSplash()))
+        BlocProvider(create: (context) => SplashBloc()..add(StartSplash())),
+        BlocProvider(create: (context) => SignUpBloc()),
+        BlocProvider(create: (context) => SignInBloc()),
+        BlocProvider(create: (context) => BottomNavBloc()),
+        BlocProvider(create: (context)=> ProfileBloc()),
       ],
       child: MaterialApp(
         home: SplashScreen(),

@@ -28,17 +28,20 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  carousel_slider: ^5.1.1
   cloud_firestore: ^6.0.3
   cupertino_icons: ^1.0.8
   equatable: ^2.0.7
-  firebase_auth: ^6.1.0
-  firebase_core: ^4.1.0
+  firebase_auth: ^6.1.1
+  firebase_core: ^4.2.0
   firebase_storage: ^13.0.2
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  font_awesome_flutter: ^10.10.0
   google_fonts: ^6.3.2
   google_sign_in: ^7.2.0
+  material_symbols_icons: ^4.2874.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0
@@ -56,13 +59,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/idoc_logo.png
-    - assets/images/medical_team.jpeg
-    - assets/images/doctor_surgery.jpeg
-    - assets/images/doctor_check.jpg
-    - assets/images/doctor_appointment.jpg
-    - assets/images/doctor_group.jpeg
-    - assets/images/google.png
+    - assets/images/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
