@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/get_started_screen4.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/welcome_screen.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_container.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_image_container.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/positioned_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/welcome_screen.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_image_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/positioned_container.dart';
 
-class GetStartedScreen3 extends StatelessWidget {
-  const GetStartedScreen3({super.key});
+class GetStartedScreen4 extends StatelessWidget {
+  const GetStartedScreen4({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class GetStartedScreen3 extends StatelessWidget {
       body: customContainer(
         child: Stack(
           children: [
-            positionedRight(),
+            positionedLeft(),
             LayoutBuilder(
               builder: (context, constraints) {
                 final contentHeight = constraints.maxHeight;
@@ -31,14 +30,12 @@ class GetStartedScreen3 extends StatelessWidget {
                           Column(
                             children: [
                               SizedBox(height: screenHeight * 0.08),
-                              customImageContainer(
-                                imagePath: 'assets/images/doctor_check.jpg',
-                              ),
+                              customImageContainer(imagePath: 'assets/images/doctor_appointment.jpg'),
                               SizedBox(height: screenHeight * 0.08),
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                                 child: Text(
-                                  'Choose Best Doctors',
+                                  'Easy Appointments',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 30,
@@ -51,7 +48,7 @@ class GetStartedScreen3 extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                                 child: Text(
-                                  'Your health is our priority. Connect with top-rated specialists and board-certified physicians dedicated to providing personalized, high-quality care',
+                                  'Book your visit in seconds, not minutes. Access real-time availability and schedule your next appointment at your convenience, 24/7.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16,
@@ -62,7 +59,6 @@ class GetStartedScreen3 extends StatelessWidget {
                               ),
                             ],
                           ),
-
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 40.0,
@@ -99,8 +95,7 @@ class GetStartedScreen3 extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                          builder:
-                                              (context) => GetStartedScreen4(),
+                                          builder: (context) => WelcomeScreen(),
                                         ),
                                       );
                                     },

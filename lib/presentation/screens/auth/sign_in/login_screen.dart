@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_project/core/utils/validators.dart';
-import 'package:second_project/logic/blocs/auth/email/sign%20in/sign_in_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign%20in/sign_in_event.dart';
-import 'package:second_project/logic/blocs/auth/email/sign%20in/sign_in_state.dart';
-import 'package:second_project/presentation/bottom%20nav/bottom_screen.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20up/sign_up.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20in/widgets/google_sign_in_button.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20in/widgets/gradient_title.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20in/widgets/labeled_text_field.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20in/widgets/register_link.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20in/widgets/styled_button.dart';
+import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
+import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_event.dart';
+import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
+import 'package:second_project/presentation/bottom_nav/bottom_screen.dart';
+import 'package:second_project/presentation/screens/auth/sign_up/sign_up.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/widgets/google_sign_in_button.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/widgets/gradient_title.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/widgets/labeled_text_field.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/widgets/register_link.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/widgets/styled_button.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});

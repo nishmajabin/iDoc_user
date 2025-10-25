@@ -5,7 +5,7 @@ import 'package:second_project/core/constants/color.dart';
 import 'package:second_project/logic/blocs/profile/profile_bloc.dart';
 import 'package:second_project/logic/blocs/profile/profile_event.dart';
 import 'package:second_project/logic/blocs/profile/profile_state.dart';
-import 'package:second_project/presentation/screens/authentication/sign%20in/login_screen.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/login_screen.dart';
 import 'package:second_project/presentation/screens/profile/widgets/alert_box.dart';
 
 class ProfileScreen extends StatelessWidget {

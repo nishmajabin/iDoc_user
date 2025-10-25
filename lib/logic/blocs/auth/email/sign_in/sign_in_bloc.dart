@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:second_project/data/models/user_model.dart';
-import 'package:second_project/logic/blocs/auth/email/sign%20in/sign_in_event.dart';
-import 'package:second_project/logic/blocs/auth/email/sign%20in/sign_in_state.dart';
+import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_event.dart';
+import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
 
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/welcome_screen.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_container.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_image_container.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/positioned_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/get_started_screen3.dart';
+import 'package:second_project/presentation/screens/get_started_screens/welcome_screen.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_image_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/positioned_container.dart';
 
-class GetStartedScreen4 extends StatelessWidget {
-  const GetStartedScreen4({super.key});
+class GetStartedScreen2 extends StatelessWidget {
+  const GetStartedScreen2({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+
 
     return Scaffold(
       body: customContainer(
@@ -30,12 +32,12 @@ class GetStartedScreen4 extends StatelessWidget {
                           Column(
                             children: [
                               SizedBox(height: screenHeight * 0.08),
-                              customImageContainer(imagePath: 'assets/images/doctor_appointment.jpg'),
+                              customImageContainer(imagePath: 'assets/images/doctor_surgery.jpeg'),
                               SizedBox(height: screenHeight * 0.08),
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                                 child: Text(
-                                  'Easy Appointments',
+                                  'Find Trusted Doctors',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 30,
@@ -48,7 +50,7 @@ class GetStartedScreen4 extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                                 child: Text(
-                                  'Book your visit in seconds, not minutes. Access real-time availability and schedule your next appointment at your convenience, 24/7.',
+                                  'Peace of mind starts here. Find the right expert from our list of trusted, experienced physicians to meet your specialized care needs.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16,
@@ -95,7 +97,8 @@ class GetStartedScreen4 extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                          builder: (context) => WelcomeScreen(),
+                                          builder:
+                                              (context) => GetStartedScreen3(),
                                         ),
                                       );
                                     },

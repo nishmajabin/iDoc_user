@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/get_started_screen3.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/welcome_screen.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_container.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/custom_image_container.dart';
-import 'package:second_project/presentation/screens/get%20started%20screens/widgets/positioned_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/get_started_screen4.dart';
+import 'package:second_project/presentation/screens/get_started_screens/welcome_screen.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_image_container.dart';
+import 'package:second_project/presentation/screens/get_started_screens/widgets/positioned_container.dart';
 
-class GetStartedScreen2 extends StatelessWidget {
-  const GetStartedScreen2({super.key});
+class GetStartedScreen3 extends StatelessWidget {
+  const GetStartedScreen3({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-
     return Scaffold(
       body: customContainer(
         child: Stack(
           children: [
-            positionedLeft(),
+            positionedRight(),
             LayoutBuilder(
               builder: (context, constraints) {
                 final contentHeight = constraints.maxHeight;
@@ -32,12 +31,14 @@ class GetStartedScreen2 extends StatelessWidget {
                           Column(
                             children: [
                               SizedBox(height: screenHeight * 0.08),
-                              customImageContainer(imagePath: 'assets/images/doctor_surgery.jpeg'),
+                              customImageContainer(
+                                imagePath: 'assets/images/doctor_check.jpg',
+                              ),
                               SizedBox(height: screenHeight * 0.08),
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                                 child: Text(
-                                  'Find Trusted Doctors',
+                                  'Choose Best Doctors',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 30,
@@ -50,7 +51,7 @@ class GetStartedScreen2 extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                                 child: Text(
-                                  'Peace of mind starts here. Find the right expert from our list of trusted, experienced physicians to meet your specialized care needs.',
+                                  'Your health is our priority. Connect with top-rated specialists and board-certified physicians dedicated to providing personalized, high-quality care',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16,
@@ -61,6 +62,7 @@ class GetStartedScreen2 extends StatelessWidget {
                               ),
                             ],
                           ),
+
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 40.0,
@@ -98,7 +100,7 @@ class GetStartedScreen2 extends StatelessWidget {
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                           builder:
-                                              (context) => GetStartedScreen3(),
+                                              (context) => GetStartedScreen4(),
                                         ),
                                       );
                                     },
