@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:second_project/core/handlers/sign_in_handler.dart';
 import 'package:second_project/core/utils/validators.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_event.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
-import 'package:second_project/presentation/bottom_nav/bottom_screen.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/sign_up.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/google_sign_in_button.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/gradient_title.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/labeled_text_field.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/register_link.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/styled_button.dart';
+import 'package:second_project/presentation/screens/auth/sign_up/sign_up_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class SignInScreen extends StatelessWidget {
+  SignInScreen({super.key});
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -22,35 +21,16 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final handler = SignInHandler(
+      formKey: _formKey,
+      emailController: _emailController,
+      passwordController: _pdController,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7FAFF),
       body: BlocListener<SignInBloc, SignInState>(
-        listener: (context, state) {
-          if (state is SignInSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 2),
-              ),
-            );
-            _emailController.clear();
-            _pdController.clear();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const BottomScreen()),
-            );
-          } else if (state is SignInFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
-                backgroundColor: Colors.red,
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        },
+        listener: (context, state) => handler.handleSignInState(context, state),
         child: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.10),
@@ -106,16 +86,7 @@ class LoginScreen extends StatelessWidget {
                 BlocBuilder<SignInBloc, SignInState>(
                   builder: (context, state) {
                     return StyledButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<SignInBloc>().add(
-                                SignInSubmitted(
-                                  email: _emailController.text.trim(),
-                                  password: _pdController.text,
-                                ),
-                              );
-                        }
-                      },
+                      onPressed: () => handler.handleSignIn(context),
                       label: 'LOGIN',
                       isLoading: state is SignInLoading,
                     );
@@ -136,11 +107,7 @@ class LoginScreen extends StatelessWidget {
                 BlocBuilder<SignInBloc, SignInState>(
                   builder: (context, state) {
                     return GoogleSignInButton(
-                      onPressed: () {
-                        context.read<SignInBloc>().add(
-                              const SignInWithGoogleSubmitted(),
-                            );
-                      },
+                      onPressed: () => handler.handleGoogleSignIn(context),
                       isDisabled: state is SignInLoading,
                     );
                   },

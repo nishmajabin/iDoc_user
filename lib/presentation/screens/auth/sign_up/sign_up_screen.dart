@@ -7,7 +7,7 @@ import 'package:second_project/core/handlers/sign_up_handler.dart';
 import 'package:second_project/core/utils/validators.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/login_screen.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
 import 'package:second_project/presentation/screens/auth/sign_up/widgets/login_link.dart';
 import 'package:second_project/presentation/screens/auth/sign_up/widgets/sign_up_button.dart';
 import 'package:second_project/presentation/screens/auth/sign_up/widgets/text_field_signup.dart';
@@ -125,7 +125,7 @@ class SignUpScreen extends StatelessWidget {
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (_) => LoginScreen()),
+                              MaterialPageRoute(builder: (_) => SignInScreen()),
                             );
                           },
                         ),

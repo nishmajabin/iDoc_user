@@ -1,5 +1,5 @@
  import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/available_specialists/available_specialists.dart';
+import 'package:second_project/presentation/screens/available_specialists/available_specialists_screen.dart';
 import 'package:second_project/presentation/screens/home/home_screen.dart';
   Widget buildBody(int currentIndex) {
     switch (currentIndex) {

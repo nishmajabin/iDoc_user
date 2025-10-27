@@ -1,19 +1,20 @@
-import 'package:equatable/equatable.dart';
-
-abstract class BottomNavState extends Equatable {
+abstract class BottomNavState {
   final int currentIndex;
+  final int previousIndex;
 
-  const BottomNavState({required this.currentIndex});
-
-  @override
-  List<Object> get props => [currentIndex];
+  const BottomNavState({
+    required this.currentIndex,
+    this.previousIndex = 0,
+  });
 }
 
 class BottomNavInitial extends BottomNavState {
-  const BottomNavInitial() : super(currentIndex: 0);
+  const BottomNavInitial() : super(currentIndex: 0, previousIndex: 0);
 }
 
 class BottomNavChanged extends BottomNavState {
-  const BottomNavChanged({required int currentIndex})
-      : super(currentIndex: currentIndex);
+  const BottomNavChanged({
+    required int currentIndex,
+    int previousIndex = 0,
+  }) : super(currentIndex: currentIndex, previousIndex: previousIndex);
 }

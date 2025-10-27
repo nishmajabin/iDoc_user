@@ -46,7 +46,7 @@ class CustomBottomNavBar extends StatelessWidget {
           ),
           _buildNavItem(
             icon: Icons.grid_view_rounded,
-            label: 'Profile',
+            label: 'Menu',
             index: 3,
             isSelected: currentIndex == 3,
           ),

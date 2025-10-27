@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:second_project/core/constants/color.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/login_screen.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
 import 'package:second_project/presentation/screens/get_started_screens/widgets/layer_blur_container.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -109,7 +109,7 @@ class WelcomeScreen extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                      builder: (context) => LoginScreen(),
+                                      builder: (context) => SignInScreen(),
                                     ),
                                   );
                                 },

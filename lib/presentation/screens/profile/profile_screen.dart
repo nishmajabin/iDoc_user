@@ -5,7 +5,7 @@ import 'package:second_project/core/constants/color.dart';
 import 'package:second_project/logic/blocs/profile/profile_bloc.dart';
 import 'package:second_project/logic/blocs/profile/profile_event.dart';
 import 'package:second_project/logic/blocs/profile/profile_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/login_screen.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
 import 'package:second_project/presentation/screens/profile/widgets/alert_box.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -21,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
           if (state is LogoutSuccess) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => SignInScreen()),
             );
           } else if (state is ProfileFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
