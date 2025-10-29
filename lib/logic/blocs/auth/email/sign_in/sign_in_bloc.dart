@@ -87,11 +87,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       final account = await _googleSignIn.authenticate();
 
-      if (account == null) {
-        emit(const SignInFailure(error: 'Sign-in was cancelled'));
-        return;
-      }
-
       final auth = account.authentication;
       final credential = GoogleAuthProvider.credential(idToken: auth.idToken);
 
