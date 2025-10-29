@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_project/firebase_options.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
+import 'package:second_project/logic/blocs/auth/log_out/logout_bloc.dart';
 import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_bloc.dart';
 import 'package:second_project/logic/blocs/profile/profile_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_bloc.dart';
@@ -27,7 +28,8 @@ class StudentApp extends StatelessWidget {
         BlocProvider(create: (context) => SignUpBloc()),
         BlocProvider(create: (context) => SignInBloc()),
         BlocProvider(create: (context) => BottomNavBloc()),
-        BlocProvider(create: (context)=> ProfileBloc()),
+        BlocProvider(create: (context) => ProfileBloc()),
+        BlocProvider(create: (context) => LogoutBloc()),
       ],
       child: MaterialApp(
         home: SplashScreen(),

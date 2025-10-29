@@ -12,7 +12,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
     BottomNavTabChanged event,
     Emitter<BottomNavState> emit,
   ) async {
-    // Store previous index before changing
     emit(BottomNavChanged(
       currentIndex: event.index,
       previousIndex: state.currentIndex,
