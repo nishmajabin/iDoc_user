@@ -1,22 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:second_project/data/repostories/profile_repository.dart';
 import 'package:second_project/logic/blocs/profile/profile_event.dart';
 import 'package:second_project/logic/blocs/profile/profile_state.dart';
 
+
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  final FirebaseAuth _firebaseAuth;
-  final FirebaseFirestore _firestore;
+  final ProfileRepository _repository;
 
   ProfileBloc({
-    FirebaseAuth? firebaseAuth,
-    FirebaseFirestore? firestore,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance,
+    ProfileRepository? repository,
+  })  : _repository = repository ?? ProfileRepository(),
         super(const ProfileInitial()) {
     on<FetchUserProfile>(_onFetchUserProfile);
     on<UpdateUserProfile>(_onUpdateUserProfile);
-    on<LogoutUser>(_onLogoutUser);
+    on<UpdateProfileImage>(_onUpdateProfileImage);
   }
 
   Future<void> _onFetchUserProfile(
@@ -24,48 +22,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     emit(const ProfileLoading());
+    
     try {
-      final user = _firebaseAuth.currentUser;
-      if (user == null) {
-        emit(const ProfileFailure(error: 'No user logged in'));
-        return;
-      }
-
-      final email = user.email ?? '';
-      final username = email.split('@').first;
-
-      try {
-        final doc =
-            await _firestore.collection('users').doc(user.uid).get();
-        if (doc.exists) {
-          final data = doc.data() as Map<String, dynamic>;
-          emit(ProfileSuccess(
-            name: data['name'] ?? username,
-            email: email,
-            mobileNumber: data['mobileNumber'] ?? '',
-            address: data['address'] ?? '',
-            profileImageUrl: data['profileImageUrl'],
-          ));
-        } else {
-          emit(ProfileSuccess(
-            name: user.displayName ?? username,
-            email: email,
-            mobileNumber: '',
-            address: '',
-            profileImageUrl: user.photoURL,
-          ));
-        }
-      } catch (e) {
-        emit(ProfileSuccess(
-          name: user.displayName ?? username,
-          email: email,
-          mobileNumber: '',
-          address: '',
-          profileImageUrl: user.photoURL,
-        ));
-      }
+      final profile = await _repository.fetchUserProfile();
+      emit(profile);
     } catch (e) {
-      emit(const ProfileFailure(error: 'Failed to load profile'));
+      emit(ProfileFailure(error: 'Failed to load profile: ${e.toString()}'));
     }
   }
 
@@ -73,46 +35,56 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     UpdateUserProfile event,
     Emitter<ProfileState> emit,
   ) async {
+    final currentState = state;
     emit(const ProfileLoading());
+
     try {
-      final user = _firebaseAuth.currentUser;
-      if (user == null) {
-        emit(const ProfileFailure(error: 'No user logged in'));
-        return;
-      }
+      final currentImageUrl = currentState is ProfileSuccess 
+          ? currentState.profileImageUrl 
+          : null;
 
-      await user.updateDisplayName(event.name);
-
-      await _firestore.collection('users').doc(user.uid).set({
-        'name': event.name,
-        'email': user.email,
-        'mobileNumber': event.mobileNumber,
-        'address': event.address,
-        'profileImageUrl': event.profileImageUrl,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-
-      emit(ProfileSuccess(
+      final profile = await _repository.updateUserProfile(
         name: event.name,
-        email: user.email ?? '',
         mobileNumber: event.mobileNumber,
         address: event.address,
-        profileImageUrl: event.profileImageUrl,
-      ));
+        currentImageUrl: currentImageUrl,
+      );
+      
+      emit(profile);
     } catch (e) {
-      emit(const ProfileFailure(error: 'Failed to update profile'));
+      emit(ProfileFailure(error: 'Failed to update profile: ${e.toString()}'));
     }
   }
 
-  Future<void> _onLogoutUser(
-    LogoutUser event,
+  Future<void> _onUpdateProfileImage(
+    UpdateProfileImage event,
     Emitter<ProfileState> emit,
   ) async {
+    final currentState = state;
+    
     try {
-      await _firebaseAuth.signOut();
-      emit(const LogoutSuccess());
+      // Get current profile data
+      ProfileSuccess? currentProfile = await _repository.getCurrentProfile(currentState);
+      
+      if (currentProfile == null) {
+        emit(const ProfileFailure(error: 'Unable to get current profile'));
+        return;
+      }
+
+      // Upload image and update profile
+      final updatedProfile = await _repository.updateProfileImage(
+        imageFile: event.imageFile,
+        currentProfile: currentProfile,
+        onProgress: (progress) => emit(ProfileImageUploading(progress, currentProfile)),
+      );
+
+      emit(updatedProfile);
     } catch (e) {
-      emit(const ProfileFailure(error: 'Failed to logout'));
+      // Restore previous state if available
+      if (currentState is ProfileSuccess) {
+        emit(currentState);
+      }
+      emit(ProfileFailure(error: 'Failed to upload image: ${e.toString()}'));
     }
   }
 }

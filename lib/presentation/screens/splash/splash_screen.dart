@@ -1,5 +1,3 @@
-// For use in existing BlocProvider tree:
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_bloc.dart';
