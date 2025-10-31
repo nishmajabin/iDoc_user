@@ -81,7 +81,7 @@ class ProfileFirestoreService {
     try {
       await user.updatePhotoURL(imageUrl);
     } catch (e) {
-      print('Warning: Could not update Auth profile photo: $e');
+      Exception('Warning: Could not update Auth profile photo: $e');
     }
   }
 

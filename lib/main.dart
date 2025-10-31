@@ -6,6 +6,7 @@ import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart'
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
 import 'package:second_project/logic/blocs/auth/log_out/logout_bloc.dart';
 import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_bloc.dart';
+import 'package:second_project/logic/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:second_project/logic/blocs/profile/profile_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_event.dart';
@@ -30,6 +31,7 @@ class StudentApp extends StatelessWidget {
         BlocProvider(create: (context) => BottomNavBloc()),
         BlocProvider(create: (context) => ProfileBloc()),
         BlocProvider(create: (context) => LogoutBloc()),
+        BlocProvider(create: (context) => ForgotPasswordBloc()),
       ],
       child: MaterialApp(
         home: SplashScreen(),

@@ -4,6 +4,7 @@ import 'package:second_project/core/handlers/sign_in_handler.dart';
 import 'package:second_project/core/utils/validators.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/forgot_password_screen.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/google_sign_in_button.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/gradient_title.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/labeled_text_field.dart';
@@ -72,7 +73,12 @@ class SignInScreen extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ForgotPasswordScreen(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Forgot Password?',
