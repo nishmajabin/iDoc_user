@@ -1,14 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:second_project/core/constants/color.dart';
 
 class LoginLink extends StatelessWidget {
   final VoidCallback onTap;
 
-  const LoginLink({
-    super.key,
-    required this.onTap,
-  });
+  const LoginLink({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class LoginLink extends StatelessWidget {
             TextSpan(
               text: 'Login',
               style: GoogleFonts.poppins(
-                color: const Color(0xFF0D72A6),
+                color: AppColors.logRegLinkColor,
                 fontWeight: FontWeight.bold,
               ),
               recognizer: TapGestureRecognizer()..onTap = onTap,

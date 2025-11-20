@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_bloc.dart';
 import 'package:second_project/logic/blocs/splash/splash_state.dart';
+import 'package:second_project/presentation/bottom_nav/bottom_screen.dart';
 import 'package:second_project/presentation/screens/get_started_screens/get_started_screen1.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -14,7 +16,19 @@ class SplashScreen extends StatelessWidget {
       body: BlocConsumer<SplashBloc, SplashState>(
         listener: (context, state) {
           if (state is SplashCompleted) {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>GetStartedScreen1()));
+            // Check if user is authenticated
+            final currentUser = FirebaseAuth.instance.currentUser;
+
+            if (currentUser != null) {
+              // User is logged in, go to Home
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => BottomScreen()),
+              );
+            } else {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => GetStartedScreen1()),
+              );
+            }
           }
         },
         builder: (context, state) {
@@ -28,8 +42,8 @@ class SplashScreen extends StatelessWidget {
               duration: const Duration(milliseconds: 150),
               curve: Curves.easeInOut,
               child: SizedBox(
-                width: 200,
-                height: 200,
+                width: 250,
+                height: 250,
                 child: Image.asset(
                   'assets/images/idoc_logo.png',
                   fit: BoxFit.contain,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:second_project/core/constants/color.dart';
 import 'package:second_project/core/handlers/sign_in_handler.dart';
 import 'package:second_project/core/utils/validators.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
+import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_event.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/forgot_password_screen.dart';
+import 'package:second_project/presentation/screens/auth/sign_in/forgot_password/forgot_password_screen.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/google_sign_in_button.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/gradient_title.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/widgets/labeled_text_field.dart';
@@ -29,7 +31,7 @@ class SignInScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7FAFF),
+      backgroundColor: AppColors.gradientColor,
       body: BlocListener<SignInBloc, SignInState>(
         listener: (context, state) => handler.handleSignInState(context, state),
         child: SafeArea(
@@ -50,20 +52,29 @@ class SignInScreen extends StatelessWidget {
                         controller: _emailController,
                         hintText: 'RT8918351@GMAIL.COM',
                         prefixIcon: Icons.email_outlined,
-                        borderColor: const Color(0xFF052C40),
-                        borderWidth: 0.9,
-                        keyboardType: TextInputType.emailAddress,
+                        borderColor: AppColors.primaryColor,
+                        keyboardType: TextInputType.visiblePassword,
                         validator: Validators.emailValidator,
                       ),
                       SizedBox(height: screenSize.height * 0.03),
-                      LabeledTextField(
-                        label: 'Password',
-                        controller: _pdController,
-                        hintText: 'Password',
-                        prefixIcon: Icons.lock_outline,
-                        backgroundColor: const Color(0xFFF5F5F5),
-                        isPassword: true,
-                        validator: Validators.passwordValidator,
+                      BlocBuilder<SignInBloc, SignInState>(
+                        builder: (context, state) {
+                          return LabeledTextField(
+                            label: 'Password',
+                            controller: _pdController,
+                            hintText: 'Password',
+                            prefixIcon: Icons.lock_outline,
+                            backgroundColor: const Color(0xFFF5F5F5),
+                            isPassword: true,
+                            obscureText: state.obscurePassword,
+                            onSuffixTap: () {
+                              context.read<SignInBloc>().add(
+                                PasswordVisibilityToggled(),
+                              );
+                            },
+                            validator: Validators.passwordValidator,
+                          );
+                        },
                       ),
                       const SizedBox(height: 10),
                     ],

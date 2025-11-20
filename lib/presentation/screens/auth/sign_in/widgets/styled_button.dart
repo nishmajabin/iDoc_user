@@ -46,7 +46,7 @@ class StyledButton extends StatelessWidget {
               width: 4,
             ),
           ),
-          disabledBackgroundColor: primaryColor,
+          disabledBackgroundColor: AppColors.primaryColor,
         ),
         child: isLoading
             ? const SizedBox(

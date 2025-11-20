@@ -81,7 +81,7 @@ class GetStartedScreen2 extends StatelessWidget {
                                     'Skip',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xFF052C40),
+                                      color: Color.fromARGB(255, 121, 121, 121),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),

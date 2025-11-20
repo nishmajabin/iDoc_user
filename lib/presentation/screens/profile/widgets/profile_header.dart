@@ -27,7 +27,7 @@ class ProfileHeader extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.arrow_back),
-              color: primaryColor,
+              color: AppColors.primaryColor,
               onPressed: onBackPressed,
             ),
             Text(
@@ -35,14 +35,14 @@ class ProfileHeader extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: primaryColor,
+                color: AppColors.primaryColor,
               ),
             ),
             Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit_note_outlined),
-                  color: primaryColor,
+                  color: AppColors.primaryColor,
                   onPressed: onEditPressed,
                 ),
                 Text(
@@ -50,7 +50,7 @@ class ProfileHeader extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: primaryColor,
+                    color: AppColors.primaryColor,
                   ),
                 ),
               ],

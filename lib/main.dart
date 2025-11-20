@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:second_project/firebase_options.dart';
+import 'package:second_project/logic/blocs/auth/auth_bloc.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
 import 'package:second_project/logic/blocs/auth/log_out/logout_bloc.dart';
@@ -32,10 +34,12 @@ class StudentApp extends StatelessWidget {
         BlocProvider(create: (context) => ProfileBloc()),
         BlocProvider(create: (context) => LogoutBloc()),
         BlocProvider(create: (context) => ForgotPasswordBloc()),
+        BlocProvider(create: (context) => AuthBloc()),
       ],
       child: MaterialApp(
         home: SplashScreen(),
         title: 'iDoc-user',
+        theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
         debugShowCheckedModeBanner: false,
       ),
     );

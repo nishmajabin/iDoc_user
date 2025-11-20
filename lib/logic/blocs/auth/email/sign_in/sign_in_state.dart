@@ -1,42 +1,38 @@
-import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:second_project/data/models/user_model.dart';
 
-abstract class SignInState extends Equatable {
-  const SignInState();
-
-  @override
-  List<Object> get props => [];
+abstract class SignInState {
+  final bool obscurePassword;
+  
+  const SignInState({this.obscurePassword = true});
 }
 
 class SignInInitial extends SignInState {
-  const SignInInitial();
+  const SignInInitial({super.obscurePassword});
 }
 
 class SignInLoading extends SignInState {
-  const SignInLoading();
+  const SignInLoading({super.obscurePassword});
 }
 
 class SignInSuccess extends SignInState {
   final String message;
   final User user;
-  final UserModel? userModel;  // Add this
-  
+  final UserModel? userModel;
+
   const SignInSuccess({
     required this.message,
     required this.user,
-    this.userModel,  // Add this
+    this.userModel,
+    super.obscurePassword,
   });
-  
-  @override
-  List<Object> get props => [message, user];
 }
 
 class SignInFailure extends SignInState {
   final String error;
 
-  const SignInFailure({required this.error});
-
-  @override
-  List<Object> get props => [error];
+  const SignInFailure({
+    required this.error,
+    super.obscurePassword,
+  });
 }

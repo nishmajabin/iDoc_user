@@ -65,9 +65,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLoadingIndicator() {
-    return const Center(
+    return Center(
       child: CircularProgressIndicator(
-        color: primaryColor,
+        color: AppColors.primaryColor,
         strokeWidth: 1.5,
       ),
     );

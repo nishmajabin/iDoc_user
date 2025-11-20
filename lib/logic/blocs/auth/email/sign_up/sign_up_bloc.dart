@@ -14,6 +14,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       _firestore = firestore ?? FirebaseFirestore.instance,
       super(const SignUpInitial()) {
     on<SignUpSubmitted>(_onSignUpSubmitted);
+    on<PasswordVisibilityToggled>(_onPasswordVisibilityToggled);
   }
 
   Future<void> _onSignUpSubmitted(
@@ -21,15 +22,17 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     Emitter<SignUpState> emit,
   ) async {
     if (event.password != event.confirmPassword) {
-      emit(const SignUpFailure(error: 'Passwords do not match'));
+      emit(SignUpFailure(
+        error: 'Passwords do not match',
+        obscurePassword: state.obscurePassword,
+      ));
       return;
     }
 
-    emit(const SignUpLoading());
+    emit(SignUpLoading(obscurePassword: state.obscurePassword));
 
     try {
-      final userCredential =
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: event.email.trim(),
         password: event.password,
       );
@@ -37,7 +40,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       final user = userCredential.user;
       if (user != null) {
         final fullName = '${event.firstName} ${event.lastName}';
-        
+
         // Update display name
         await user.updateDisplayName(fullName);
 
@@ -52,21 +55,62 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         );
 
         // Save to Firestore using UserModel's toMap method
-        await _firestore.collection('users').doc(user.uid).set(
-          userModel.toMap(),
-        );
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userModel.toMap());
 
-        emit(SignUpSuccess(
-          message: 'Account created successfully!',
-          userModel: userModel,
-        ));
+        emit(
+          SignUpSuccess(
+            message: 'Account created successfully!',
+            userModel: userModel,
+            obscurePassword: state.obscurePassword,
+          ),
+        );
       } else {
-        emit(const SignUpFailure(error: 'Failed to create user'));
+        emit(SignUpFailure(
+          error: 'Failed to create user',
+          obscurePassword: state.obscurePassword,
+        ));
       }
     } on FirebaseAuthException catch (e) {
-      emit(SignUpFailure(error: _handleFirebaseError(e)));
+      emit(SignUpFailure(
+        error: _handleFirebaseError(e),
+        obscurePassword: state.obscurePassword,
+      ));
     } catch (e) {
-      emit(const SignUpFailure(error: 'An unexpected error occurred'));
+      emit(SignUpFailure(
+        error: 'An unexpected error occurred',
+        obscurePassword: state.obscurePassword,
+      ));
+    }
+  }
+
+  void _onPasswordVisibilityToggled(
+    PasswordVisibilityToggled event,
+    Emitter<SignUpState> emit,
+  ) {
+    final newObscureValue = !state.obscurePassword;
+
+    if (state is SignUpLoading) {
+      emit(SignUpLoading(obscurePassword: newObscureValue));
+    } else if (state is SignUpFailure) {
+      emit(
+        SignUpFailure(
+          error: (state as SignUpFailure).error,
+          obscurePassword: newObscureValue,
+        ),
+      );
+    } else if (state is SignUpSuccess) {
+      emit(
+        SignUpSuccess(
+          message: (state as SignUpSuccess).message,
+          userModel: (state as SignUpSuccess).userModel,
+          obscurePassword: newObscureValue,
+        ),
+      );
+    } else {
+      emit(SignUpInitial(obscurePassword: newObscureValue));
     }
   }
 

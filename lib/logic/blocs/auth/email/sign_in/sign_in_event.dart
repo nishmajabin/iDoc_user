@@ -1,10 +1,5 @@
-import 'package:equatable/equatable.dart';
-
-abstract class SignInEvent extends Equatable {
+abstract class SignInEvent {
   const SignInEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class SignInSubmitted extends SignInEvent {
@@ -15,11 +10,12 @@ class SignInSubmitted extends SignInEvent {
     required this.email,
     required this.password,
   });
-
-  @override
-  List<Object> get props => [email, password];
 }
 
 class SignInWithGoogleSubmitted extends SignInEvent {
   const SignInWithGoogleSubmitted();
+}
+
+class PasswordVisibilityToggled extends SignInEvent {
+  const PasswordVisibilityToggled();
 }

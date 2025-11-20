@@ -22,33 +22,31 @@ class SignUpButton extends StatelessWidget {
           elevation: 5,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
-            side: const BorderSide(
-              color: Color(0xFF6AD2FF),
-              width: 5,
-            ),
+            side: const BorderSide(color: Color(0xFF6AD2FF), width: 5),
           ),
           disabledBackgroundColor: Colors.grey,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 22),
-          child: isLoading
-              ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    strokeWidth: 2,
+          child:
+              isLoading
+                  ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 2,
+                    ),
+                  )
+                  : Text(
+                    'NEXT',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 17.5,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                )
-              : Text(
-                  'NEXT',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 17.5,
-                    letterSpacing: 1.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
         ),
       ),
     );

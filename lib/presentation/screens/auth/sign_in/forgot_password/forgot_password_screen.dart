@@ -48,9 +48,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 const BackButtonWidget(),
                 const SizedBox(height: 40),
-                _buildTitle(),
+                Center(child: _buildTitle()),
                 const SizedBox(height: 24),
-                _buildSubtitle(),
+                Center(child: _buildSubtitle()),
                 const SizedBox(height: 40),
                 EmailInputField(
                   controller: emailController,
@@ -63,7 +63,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                   builder: (context, state) {
                     return StyledButton(
                       onPressed: () {
-                        context.read<ForgotPasswordBloc>().add(const SendResetLinkPressed());
+                        context.read<ForgotPasswordBloc>().add(
+                          const SendResetLinkPressed(),
+                        );
                       },
                       label: 'SEND',
                       isLoading: state is ForgotPasswordLoading,
@@ -82,6 +84,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget _buildTitle() {
     return const Text(
       'FORGOT PASSWORD',
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -97,19 +100,14 @@ class ForgotPasswordScreen extends StatelessWidget {
       children: [
         Text(
           'Please Enter Your Register\nemail',
-          style: TextStyle(
-            fontSize: 15,
-            color: Color(0xFF6B7280),
-            height: 1.5,
-          ),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 15, color: Color(0xFF6B7280), height: 1.5),
         ),
         SizedBox(height: 8),
         Text(
           'To Receive a Verification Code',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF6B7280),
-          ),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
         ),
       ],
     );

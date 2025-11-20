@@ -122,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                         'See All',
                         style: TextStyle(
                           fontSize: 13,
-                          color: primaryColor,
+                          color: AppColors.primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -178,7 +178,7 @@ class HomeScreen extends StatelessWidget {
                           'See All',
                           style: TextStyle(
                             fontSize: 13,
-                            color: primaryColor,
+                            color: AppColors.primaryColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

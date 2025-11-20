@@ -8,7 +8,6 @@ import 'package:second_project/data/models/user_model.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_event.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
 
-
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -24,13 +23,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
        super(const SignInInitial()) {
     on<SignInSubmitted>(_onSignInSubmitted);
     on<SignInWithGoogleSubmitted>(_onSignInWithGoogleSubmitted);
+    on<PasswordVisibilityToggled>(_onPasswordVisibilityToggled);
   }
 
   Future<void> _onSignInSubmitted(
     SignInSubmitted event,
     Emitter<SignInState> emit,
   ) async {
-    emit(const SignInLoading());
+    emit(SignInLoading(obscurePassword: state.obscurePassword));
 
     try {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -54,22 +54,33 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
             message: 'Login successful!',
             user: user,
             userModel: userModel,
+            obscurePassword: state.obscurePassword,
           ));
         } else {
           // If document doesn't exist, emit success with just Firebase User
           emit(SignInSuccess(
             message: 'Login successful!',
             user: user,
+            obscurePassword: state.obscurePassword,
           ));
         }
       } else {
-        emit(const SignInFailure(error: 'User not found!'));
+        emit(SignInFailure(
+          error: 'User not found!',
+          obscurePassword: state.obscurePassword,
+        ));
       }
     } on FirebaseAuthException catch (e) {
-      emit(SignInFailure(error: _handleFirebaseError(e)));
+      emit(SignInFailure(
+        error: _handleFirebaseError(e),
+        obscurePassword: state.obscurePassword,
+      ));
     } catch (e) {
       log('Sign-in error: $e');
-      emit(const SignInFailure(error: 'An unexpected error occurred'));
+      emit(SignInFailure(
+        error: 'An unexpected error occurred',
+        obscurePassword: state.obscurePassword,
+      ));
     }
   }
 
@@ -77,7 +88,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     SignInWithGoogleSubmitted event,
     Emitter<SignInState> emit,
   ) async {
-    emit(const SignInLoading());
+    emit(SignInLoading(obscurePassword: state.obscurePassword));
 
     try {
       await _googleSignIn.initialize(
@@ -120,21 +131,63 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           message: 'Google login successful!',
           user: user,
           userModel: userModel,
+          obscurePassword: state.obscurePassword,
         ));
       } else {
-        emit(const SignInFailure(error: 'User not found!'));
+        emit(SignInFailure(
+          error: 'User not found!',
+          obscurePassword: state.obscurePassword,
+        ));
       }
     } on GoogleSignInException catch (e) {
       if (e.code == GoogleSignInExceptionCode.canceled) {
         log('Sign-in cancelled by user.');
-        emit(const SignInFailure(error: 'Sign-in cancelled by user.'));
+        emit(SignInFailure(
+          error: 'Sign-in cancelled by user.',
+          obscurePassword: state.obscurePassword,
+        ));
         return;
       }
       log('Google Sign-In Exception: $e');
-      emit(const SignInFailure(error: 'Google Sign-In failed'));
+      emit(SignInFailure(
+        error: 'Google Sign-In failed',
+        obscurePassword: state.obscurePassword,
+      ));
     } catch (e) {
       log('Google Sign-In error: $e');
-      emit(const SignInFailure(error: 'Google Sign-In failed'));
+      emit(SignInFailure(
+        error: 'Google Sign-In failed',
+        obscurePassword: state.obscurePassword,
+      ));
+    }
+  }
+
+  void _onPasswordVisibilityToggled(
+    PasswordVisibilityToggled event,
+    Emitter<SignInState> emit,
+  ) {
+    final newObscureValue = !state.obscurePassword;
+
+    if (state is SignInLoading) {
+      emit(SignInLoading(obscurePassword: newObscureValue));
+    } else if (state is SignInFailure) {
+      emit(
+        SignInFailure(
+          error: (state as SignInFailure).error,
+          obscurePassword: newObscureValue,
+        ),
+      );
+    } else if (state is SignInSuccess) {
+      emit(
+        SignInSuccess(
+          message: (state as SignInSuccess).message,
+          user: (state as SignInSuccess).user,
+          userModel: (state as SignInSuccess).userModel,
+          obscurePassword: newObscureValue,
+        ),
+      );
+    } else {
+      emit(SignInInitial(obscurePassword: newObscureValue));
     }
   }
 

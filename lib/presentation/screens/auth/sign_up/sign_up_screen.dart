@@ -1,16 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:second_project/core/constants/color.dart';
 import 'package:second_project/core/handlers/sign_up_handler.dart';
-import 'package:second_project/core/utils/validators.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
 import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_state.dart';
 import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
 import 'package:second_project/presentation/screens/auth/sign_up/widgets/login_link.dart';
 import 'package:second_project/presentation/screens/auth/sign_up/widgets/sign_up_button.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/widgets/text_field_signup.dart';
+import 'package:second_project/presentation/screens/auth/sign_up/widgets/user_form_fields.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -35,7 +33,7 @@ class SignUpScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7FAFF),
+      backgroundColor: AppColors.bgColor,
       body: BlocListener<SignUpBloc, SignUpState>(
         listener: (context, state) => handler.handleSignUpState(context, state),
         child: Container(
@@ -43,14 +41,13 @@ class SignUpScreen extends StatelessWidget {
           height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topLeft,
+              begin: Alignment.topCenter,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white,
-                const Color.fromARGB(255, 186, 232, 255),
-                Colors.white,
+                AppColors.gradientColor,
+                AppColors.gradientMainColor.withValues(alpha: 0.01),
               ],
-              stops: const [0.1, 0.5, 0.9],
+              stops: const [0.1, 1],
             ),
           ),
           child: SingleChildScrollView(
@@ -61,55 +58,24 @@ class SignUpScreen extends StatelessWidget {
                 Text(
                   'SIGN UP',
                   style: GoogleFonts.poppins(
-                    color: primaryColor,
-                    fontSize: 26,
+                    color: AppColors.primaryColor,
+                    fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Form(
                   key: _formKey,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
                       children: [
-                        const SizedBox(height: 40),
-                        CustomTextField(
-                          controller: _firstNameController,
-                          hintText: 'First Name',
-                          prefixIcon: CupertinoIcons.person,
-                          keyboardType: TextInputType.name,
-                          validator: (value) => Validators.nameValidator(value, 'First Name'),
-                        ),
-                        const SizedBox(height: 30),
-                        CustomTextField(
-                          controller: _lastNameController,
-                          hintText: 'Last Name',
-                          prefixIcon: CupertinoIcons.person,
-                          keyboardType: TextInputType.name,
-                          validator: (value) => Validators.nameValidator(value, 'Last Name'),
-                        ),
-                        const SizedBox(height: 30),
-                        CustomTextField(
-                          controller: _emailController,
-                          hintText: 'Email',
-                          prefixIcon: Icons.mail_outline,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: Validators.emailValidator,
-                        ),
-                        const SizedBox(height: 30),
-                        CustomTextField(
-                          controller: _passwordController,
-                          hintText: 'Password',
-                          prefixIcon: Icons.lock_outline,
-                          keyboardType: TextInputType.text,
-                          validator: Validators.strongPasswordValidator,
-                        ),
-                        const SizedBox(height: 30),
-                        CustomTextField(
-                          controller: _confirmPasswordController,
-                          hintText: 'Confirm password',
-                          prefixIcon: Icons.lock_outline,
-                          validator: (value) => Validators.confirmPasswordValidator(value, _passwordController.text),
+                        const SizedBox(height: 60),
+                        UserFormFields(
+                          firstNameController: _firstNameController,
+                          lastNameController: _lastNameController,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          confirmPasswordController: _confirmPasswordController,
                         ),
                         const SizedBox(height: 55),
                         BlocBuilder<SignUpBloc, SignUpState>(

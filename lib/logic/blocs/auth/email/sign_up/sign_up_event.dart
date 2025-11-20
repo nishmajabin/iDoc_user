@@ -26,3 +26,5 @@ class SignUpSubmitted extends SignUpEvent {
   List<Object> get props =>
       [firstName, lastName, email, password, confirmPassword];
 }
+
+class PasswordVisibilityToggled extends SignUpEvent {}
