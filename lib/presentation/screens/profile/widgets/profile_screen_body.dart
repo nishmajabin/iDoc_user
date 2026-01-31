@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/data/services/image_picker.dart';
-import 'package:second_project/logic/blocs/profile/profile_bloc.dart';
-import 'package:second_project/logic/blocs/profile/profile_event.dart';
-import 'package:second_project/logic/blocs/profile/profile_state.dart';
-import 'package:second_project/presentation/screens/profile/widgets/profile_header.dart';
-import 'package:second_project/presentation/screens/profile/widgets/profile_avatar.dart';
-import 'package:second_project/presentation/screens/profile/widgets/profile_info_section.dart';
-import 'package:second_project/presentation/screens/profile/widgets/image_source_dialog.dart';
+import 'package:idoc_user/data/services/image_picker.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_bloc.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_event.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_state.dart';
+import 'package:idoc_user/presentation/screens/profile/widgets/image_source_dialog.dart';
+import 'package:idoc_user/presentation/screens/profile/widgets/profile_avatar.dart';
+import 'package:idoc_user/presentation/screens/profile/widgets/profile_header.dart';
+import 'package:idoc_user/presentation/screens/profile/widgets/profile_info_section.dart';
 
 class ProfileScreenBody extends StatelessWidget {
   final ProfileSuccess profileData;

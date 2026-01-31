@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/data/models/user_model.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_event.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_state.dart';
+import 'package:idoc_user/data/models/user_model.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_event.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   final FirebaseAuth _firebaseAuth;

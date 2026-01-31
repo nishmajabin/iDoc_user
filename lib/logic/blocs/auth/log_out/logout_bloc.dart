@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_event.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_state.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_event.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_state.dart';
 
 class LogoutBloc extends Bloc<LogoutEvent, LogoutState> {
   final FirebaseAuth _firebaseAuth;

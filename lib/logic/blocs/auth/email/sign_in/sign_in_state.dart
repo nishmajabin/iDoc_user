@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:second_project/data/models/user_model.dart';
+import 'package:idoc_user/data/models/user_model.dart';
 
 abstract class SignInState {
   final bool obscurePassword;

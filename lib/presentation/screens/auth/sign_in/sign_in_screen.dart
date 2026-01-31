@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/core/constants/color.dart';
-import 'package:second_project/core/handlers/sign_in_handler.dart';
-import 'package:second_project/core/utils/validators.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_event.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_in/sign_in_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/forgot_password/forgot_password_screen.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/widgets/google_sign_in_button.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/widgets/gradient_title.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/widgets/labeled_text_field.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/widgets/register_link.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/widgets/styled_button.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/sign_up_screen.dart';
+import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/handlers/sign_in_handler.dart';
+import 'package:idoc_user/core/utils/validators.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_in/sign_in_event.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_in/sign_in_state.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/forgot_password/forgot_password_screen.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/widgets/google_sign_in_button.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/widgets/gradient_title.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/widgets/labeled_text_field.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/widgets/register_link.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/widgets/styled_button.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_up/sign_up_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});

@@ -1,9 +1,8 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/data/repostories/profile_repository.dart';
-import 'package:second_project/logic/blocs/profile/profile_event.dart';
-import 'package:second_project/logic/blocs/profile/profile_state.dart';
-
+import 'package:idoc_user/data/repostories/profile_repository.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_event.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _repository;

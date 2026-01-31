@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/core/constants/color.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/get_started_button.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/layer_blur_container.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/welcom_title.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/welcome_description.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/welcome_image.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/welcome_logo_text.dart';
+import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/get_started_button.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/layer_blur_container.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/welcom_title.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/welcome_description.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/welcome_image.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/welcome_logo_text.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

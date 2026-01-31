@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/splash/splash_event.dart';
-import 'package:second_project/logic/blocs/splash/splash_state.dart';
+import 'package:idoc_user/logic/blocs/splash/splash_event.dart';
+import 'package:idoc_user/logic/blocs/splash/splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Timer? _animationTimer;

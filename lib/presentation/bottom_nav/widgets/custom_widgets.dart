@@ -1,12 +1,13 @@
  import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/available_specialists/available_specialists_screen.dart';
-import 'package:second_project/presentation/screens/home/home_screen.dart';
+import 'package:idoc_user/presentation/screens/available_specialists/available_specialists_screen.dart';
+import 'package:idoc_user/presentation/screens/home/home_screen.dart';
+
   Widget buildBody(int currentIndex) {
     switch (currentIndex) {
       case 0:
         return HomeScreen();
       case 1:
-        return AvailableSpecialists();
+        return AvailableSpecialistsScreen();
       case 2:
         return buildNotificationsContent();
       case 3:

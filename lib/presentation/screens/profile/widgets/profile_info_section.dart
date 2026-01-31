@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/logic/blocs/profile/profile_state.dart';
-import 'package:second_project/presentation/screens/profile/widgets/profile_info_field.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_state.dart';
+import 'package:idoc_user/presentation/screens/profile/widgets/profile_info_field.dart';
 
 class ProfileInfoSection extends StatelessWidget {
   final ProfileSuccess profileData;

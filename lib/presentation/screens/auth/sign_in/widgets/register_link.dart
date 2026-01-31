@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:second_project/core/constants/color.dart';
+import 'package:idoc_user/core/constants/color.dart';
 
 class RegisterLink extends StatelessWidget {
   final VoidCallback onTap;

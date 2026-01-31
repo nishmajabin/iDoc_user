@@ -10,4 +10,5 @@ class AppColors {
   static Color bgColor = Color(0xFFF7FAFF);
   static Color labelTextColor = Color.fromARGB(255, 62, 62, 62);
   static Color logRegLinkColor = Color(0xFF0D72A6);
+  // static color 
 }

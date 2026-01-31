@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_bloc.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_state.dart';
-import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_bloc.dart';
-import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_event.dart';
-import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_state.dart';
-import 'package:second_project/presentation/bottom_nav/bottom_nav.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
-import 'package:second_project/presentation/screens/available_specialists/available_specialists_screen.dart';
-import 'package:second_project/presentation/screens/home/home_screen.dart';
-import 'package:second_project/presentation/screens/menu/menu_bottom_sheet.dart';
-import 'package:second_project/presentation/screens/notification/notification_screen.dart';
-import 'package:second_project/presentation/screens/profile/profile_screen.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_bloc.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_state.dart';
+import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_bloc.dart';
+import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_event.dart';
+import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_state.dart';
+import 'package:idoc_user/presentation/bottom_nav/bottom_nav.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/sign_in_screen.dart';
+import 'package:idoc_user/presentation/screens/available_specialists/available_specialists_screen.dart';
+import 'package:idoc_user/presentation/screens/home/home_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/menu_bottom_sheet.dart';
+import 'package:idoc_user/presentation/screens/notification/notification_screen.dart';
+import 'package:idoc_user/presentation/screens/profile/profile_screen.dart';
 
 class BottomScreen extends StatelessWidget {
   const BottomScreen({super.key});
@@ -116,7 +116,7 @@ class BottomScreen extends StatelessWidget {
       case 0:
         return const HomeScreen();
       case 1:
-        return const AvailableSpecialists();
+        return const AvailableSpecialistsScreen();
       case 2:
         return const NotificationsScreen();
       case 3:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:second_project/core/constants/color.dart';
+import 'package:idoc_user/core/constants/color.dart';
 
 class WelcomeLogoText extends StatelessWidget {
   const WelcomeLogoText({super.key});

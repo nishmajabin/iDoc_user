@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/core/constants/color.dart';
+import 'package:idoc_user/core/constants/color.dart';
 
 class StyledButton extends StatelessWidget {
   final VoidCallback? onPressed;

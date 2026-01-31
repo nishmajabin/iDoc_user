@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:second_project/data/services/profile_firestore_service.dart';
-import 'package:second_project/data/services/cloudinary_service.dart';
-import 'package:second_project/logic/blocs/profile/profile_state.dart';
+import 'package:idoc_user/data/services/cloudinary_service.dart';
+import 'package:idoc_user/data/services/profile_firestore_service.dart';
+import 'package:idoc_user/logic/blocs/profile/profile_state.dart';
 
 class ProfileRepository {
   final ProfileFirestoreService _firestoreService;
@@ -46,15 +46,12 @@ class ProfileRepository {
     ProfileSuccess? currentProfile,
     required Function(double) onProgress,
   }) async {
-    // Upload to Cloudinary
     onProgress(0.0);
     final imageUrl = await _cloudinaryService.uploadImage(imageFile);
     onProgress(1.0);
 
-    // Update Firestore
     await _firestoreService.updateProfileImage(imageUrl);
 
-    // Return updated profile
     if (currentProfile != null) {
       return currentProfile.copyWith(profileImageUrl: imageUrl);
     }

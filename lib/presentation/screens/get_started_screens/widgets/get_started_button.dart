@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/sign_in_screen.dart';
 
 class GetStartedButton extends StatelessWidget {
   const GetStartedButton({super.key});

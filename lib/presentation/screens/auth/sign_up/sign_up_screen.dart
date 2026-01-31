@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:second_project/core/constants/color.dart';
-import 'package:second_project/core/handlers/sign_up_handler.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/widgets/login_link.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/widgets/sign_up_button.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/widgets/user_form_fields.dart';
+import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/handlers/sign_up_handler.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_state.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/sign_in_screen.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_up/widgets/login_link.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_up/widgets/sign_up_button.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_up/widgets/user_form_fields.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});

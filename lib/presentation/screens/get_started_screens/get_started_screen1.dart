@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/get_started_screens/get_started_screen2.dart';
-import 'package:second_project/presentation/screens/get_started_screens/welcome_screen.dart';
-import 'package:second_project/presentation/screens/get_started_screens/widgets/custom_container.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/get_started_screen2.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/welcome_screen.dart';
+import 'package:idoc_user/presentation/screens/get_started_screens/widgets/custom_container.dart';
 
 class GetStartedScreen1 extends StatelessWidget {
   const GetStartedScreen1({super.key});

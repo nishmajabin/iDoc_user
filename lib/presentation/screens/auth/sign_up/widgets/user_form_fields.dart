@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/core/utils/validators.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_event.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_up/widgets/text_field_signup.dart';
+import 'package:idoc_user/core/utils/validators.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_event.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_state.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_up/widgets/text_field_signup.dart';
 
 class UserFormFields extends StatelessWidget {
   final TextEditingController firstNameController;

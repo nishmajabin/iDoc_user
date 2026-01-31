@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_event.dart';
-import 'package:second_project/logic/blocs/bottom_nav/bottom_nav_state.dart';
+import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_event.dart';
+import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_state.dart';
 
 class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
   BottomNavBloc() : super(const BottomNavInitial()) {

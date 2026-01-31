@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/forgot_password/forgot_password_event.dart';
-import 'package:second_project/logic/blocs/forgot_password/forgot_password_state.dart';
+import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_event.dart';
+import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_state.dart';
 
 class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
   final FirebaseAuth _firebaseAuth;

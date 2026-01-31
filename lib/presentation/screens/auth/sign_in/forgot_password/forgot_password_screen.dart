@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/forgot_password/forgot_password_bloc.dart';
-import 'package:second_project/logic/blocs/forgot_password/forgot_password_event.dart';
-import 'package:second_project/logic/blocs/forgot_password/forgot_password_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/forgot_password/widgets/back_button_widget.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/forgot_password/widgets/email_input_field.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/widgets/styled_button.dart';
+import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_bloc.dart';
+import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_event.dart';
+import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_state.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/forgot_password/widgets/back_button_widget.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/forgot_password/widgets/email_input_field.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/widgets/styled_button.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});

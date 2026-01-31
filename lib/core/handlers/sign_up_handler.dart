@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_event.dart';
-import 'package:second_project/logic/blocs/auth/email/sign_up/sign_up_state.dart';
-import 'package:second_project/presentation/bottom_nav/bottom_screen.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_bloc.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_event.dart';
+import 'package:idoc_user/logic/blocs/auth/email/sign_up/sign_up_state.dart';
+import 'package:idoc_user/presentation/bottom_nav/bottom_screen.dart';
 
 class SignUpHandler {
   final GlobalKey<FormState> formKey;

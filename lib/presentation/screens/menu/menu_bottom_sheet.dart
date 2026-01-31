@@ -1,14 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_bloc.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_event.dart';
-import 'package:second_project/logic/blocs/auth/log_out/logout_state.dart';
-import 'package:second_project/presentation/screens/auth/sign_in/sign_in_screen.dart';
-import 'package:second_project/presentation/screens/menu/widgets/logout_dialog.dart';
-import 'package:second_project/presentation/screens/menu/widgets/menu_divider.dart';
-import 'package:second_project/presentation/screens/menu/widgets/menu_item.dart';
-import 'package:second_project/presentation/screens/profile/profile_screen.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_bloc.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_event.dart';
+import 'package:idoc_user/logic/blocs/auth/log_out/logout_state.dart';
+import 'package:idoc_user/presentation/screens/auth/sign_in/sign_in_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/my_appointment/my_appointment_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/widgets/logout_dialog.dart';
+import 'package:idoc_user/presentation/screens/menu/widgets/menu_divider.dart';
+import 'package:idoc_user/presentation/screens/menu/widgets/menu_item.dart';
+import 'package:idoc_user/presentation/screens/profile/profile_screen.dart';
 
 class MenuPanel extends StatelessWidget {
   final VoidCallback onClose;
@@ -49,7 +50,13 @@ class MenuPanel extends StatelessWidget {
             MenuItem(
               icon: Icons.calendar_today,
               label: 'My Appointment',
-              onTap: () => onClose(),
+              onTap: () {
+                onClose();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  MyAppointmentsScreen()),
+                );
+              },
             ),
             const MenuDivider(),
             MenuItem(

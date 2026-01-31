@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:second_project/presentation/screens/home/widgets/doctors_card.dart';
+import 'package:idoc_user/presentation/screens/home/widgets/doctors_card.dart';
 
 Widget buildCarousel(List doctors) {
   if (doctors.isEmpty) {
