@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:idoc_user/data/models/user_model.dart';
 import 'package:idoc_user/logic/blocs/auth/log_out/logout_bloc.dart';
 import 'package:idoc_user/logic/blocs/auth/log_out/logout_state.dart';
 import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_bloc.dart';
@@ -12,9 +13,11 @@ import 'package:idoc_user/presentation/screens/home/home_screen.dart';
 import 'package:idoc_user/presentation/screens/menu/menu_bottom_sheet.dart';
 import 'package:idoc_user/presentation/screens/notification/notification_screen.dart';
 import 'package:idoc_user/presentation/screens/profile/profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BottomScreen extends StatelessWidget {
-  const BottomScreen({super.key});
+  final UserModel? user;
+  const BottomScreen({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +115,20 @@ class BottomScreen extends StatelessWidget {
   }
 
   Widget _buildBody(int currentIndex) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final userModel =
+        user ??
+        (currentUser != null
+            ? UserModel(
+              uid: currentUser.uid,
+              name: currentUser.displayName ?? 'User',
+              email: currentUser.email ?? '',
+            )
+            : UserModel(uid: '', name: '', email: ''));
+
     switch (currentIndex) {
       case 0:
-        return const HomeScreen();
+        return HomeScreen(user: userModel);
       case 1:
         return const AvailableSpecialistsScreen();
       case 2:
@@ -122,7 +136,7 @@ class BottomScreen extends StatelessWidget {
       case 3:
         return const ProfileScreen();
       default:
-        return const HomeScreen();
+        return HomeScreen(user: userModel);
     }
   }
 }

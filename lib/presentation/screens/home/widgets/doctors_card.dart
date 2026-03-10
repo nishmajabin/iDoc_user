@@ -7,6 +7,7 @@ Widget buildDoctorCard(
   String imageUrl,
 ) {
   return Container(
+    
     decoration: BoxDecoration(
       gradient: LinearGradient(
         colors: [Color(0xFFB3E5FC), Color(0xFF81D4FA)],

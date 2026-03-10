@@ -33,6 +33,42 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<CancelAppointmentEvent>(_onCancelAppointment);
   }
 
+  /// Helper method to check if a slot is in the past
+  bool _isSlotInPast(DateTime slotDate, String startTime) {
+    try {
+      final now = DateTime.now();
+      
+      // Parse the start time
+      final timeParts = startTime.replaceAll(RegExp(r'[AP]M'), '').trim().split(':');
+      int hour = int.parse(timeParts[0]);
+      final minute = int.parse(timeParts[1]);
+      
+      // Handle AM/PM format
+      if (startTime.contains('PM') && hour != 12) {
+        hour += 12;
+      } else if (startTime.contains('AM') && hour == 12) {
+        hour = 0;
+      }
+      
+      // Create the full slot datetime
+      final slotDateTime = DateTime(
+        slotDate.year,
+        slotDate.month,
+        slotDate.day,
+        hour,
+        minute,
+      );
+      
+      // Add 5-minute buffer
+      final bufferTime = now.add(const Duration(minutes: 5));
+      
+      return slotDateTime.isBefore(bufferTime);
+    } catch (e) {
+      print('Error parsing time in BLoC: $e');
+      return true; // If parsing fails, consider it past to be safe
+    }
+  }
+
   Future<void> _onSetPatientDetails(
     SetPatientDetailsEvent event,
     Emitter<AppointmentState> emit,
@@ -213,6 +249,21 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     SelectSlotEvent event,
     Emitter<AppointmentState> emit,
   ) async {
+    // Validate that the slot is not in the past before allowing selection
+    if (_selectedDate != null) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final selectedDay = DateTime(_selectedDate!.year, _selectedDate!.month, _selectedDate!.day);
+      
+      if (selectedDay.isAtSameMomentAs(today)) {
+        if (_isSlotInPast(_selectedDate!, event.startTime)) {
+          print('⚠️ WARNING: User tried to select a past slot');
+          emit(const AppointmentError('This time slot has already passed. Please select a future time.'));
+          return;
+        }
+      }
+    }
+
     _selectedSlotId = event.slotId;
     _selectedStartTime = event.startTime;
     _selectedEndTime = event.endTime;
@@ -297,6 +348,19 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         print('❌ ERROR: End Time is missing');
         emit(const AppointmentError('Please select a time slot.'));
         return;
+      }
+
+      // Final validation: Check if the slot is in the past
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final appointmentDay = DateTime(_selectedDate!.year, _selectedDate!.month, _selectedDate!.day);
+      
+      if (appointmentDay.isAtSameMomentAs(today)) {
+        if (_isSlotInPast(_selectedDate!, _selectedStartTime!)) {
+          print('❌ ERROR: Attempted to book a past slot');
+          emit(const AppointmentError('Cannot book a time slot that has already passed. Please select a future time slot.'));
+          return;
+        }
       }
 
       emit(const AppointmentLoading());

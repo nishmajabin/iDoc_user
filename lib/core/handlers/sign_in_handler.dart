@@ -44,11 +44,11 @@ class SignInHandler {
   void handleSignIn(BuildContext context) {
     if (formKey.currentState!.validate()) {
       context.read<SignInBloc>().add(
-            SignInSubmitted(
-              email: emailController.text.trim(),
-              password: passwordController.text,
-            ),
-          );
+        SignInSubmitted(
+          email: emailController.text.trim(),
+          password: passwordController.text,
+        ),
+      );
     }
   }
 

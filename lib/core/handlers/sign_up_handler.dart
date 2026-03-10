@@ -50,14 +50,14 @@ class SignUpHandler {
   void handleSignUp(BuildContext context) {
     if (formKey.currentState!.validate()) {
       context.read<SignUpBloc>().add(
-            SignUpSubmitted(
-              firstName: firstNameController.text.trim(),
-              lastName: lastNameController.text.trim(),
-              email: emailController.text.trim(),
-              password: passwordController.text,
-              confirmPassword: confirmPasswordController.text,
-            ),
-          );
+        SignUpSubmitted(
+          firstName: firstNameController.text.trim(),
+          lastName: lastNameController.text.trim(),
+          email: emailController.text.trim(),
+          password: passwordController.text,
+          confirmPassword: confirmPasswordController.text,
+        ),
+      );
     }
   }
 

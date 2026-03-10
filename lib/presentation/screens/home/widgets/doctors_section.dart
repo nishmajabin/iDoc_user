@@ -11,17 +11,16 @@ class HomeDoctorsSection extends StatelessWidget {
     return Column(
       children: [
         SectionHeader(
-          title: 'Available Doctor',
+          title: 'Available Doctors',
+
           onSeeAllTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const AllDoctorsScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => const AllDoctorsScreen()),
             );
           },
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 15),
         const DoctorsListHome(),
       ],
     );

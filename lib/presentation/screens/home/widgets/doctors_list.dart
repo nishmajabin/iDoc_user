@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:idoc_user/core/constants/color.dart';
 import 'package:idoc_user/data/models/doctor_model.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/doctor_detail_screen.dart';
 
@@ -43,23 +44,38 @@ Widget buildDoctorsListVertical(List<DoctorModel> doctors) {
     );
   }
 
-  // Show only first 4 doctors in home screen
-  final displayDoctors = doctors.take(4).toList();
+  // Show only first 6 doctors in home screen
+  final displayDoctors = doctors.take(6).toList();
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: displayDoctors.length,
-      itemBuilder: (context, index) {
-        return _buildDoctorCard(displayDoctors[index]);
+  return SizedBox(
+    height: 340, // Reduced height to prevent overflow
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      itemCount: (displayDoctors.length / 2).ceil(), // Number of columns needed
+      itemBuilder: (context, columnIndex) {
+        final startIndex = columnIndex * 2;
+        final endIndex = (startIndex + 2).clamp(0, displayDoctors.length);
+        final columnDoctors = displayDoctors.sublist(startIndex, endIndex);
+
+        return Padding(
+          padding: EdgeInsets.only(
+            right:
+                columnIndex < (displayDoctors.length / 2).ceil() - 1 ? 12 : 0,
+          ),
+          child: Column(
+            children: [
+              // First card in column
+              _buildDoctorCard(columnDoctors[0]),
+
+              // Second card in column (if exists)
+              if (columnDoctors.length > 1) ...[
+                const SizedBox(height: 10),
+                _buildDoctorCard(columnDoctors[1]),
+              ],
+            ],
+          ),
+        );
       },
     ),
   );
@@ -78,14 +94,16 @@ Widget _buildDoctorCard(DoctorModel doctor) {
           );
         },
         child: Container(
+          width: 150,
+          height: 165,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color.fromARGB(255, 246, 251, 255),
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: AppColors.primaryColor.withValues(alpha: 0.46),
                 blurRadius: 4,
-                offset: const Offset(0, 2),
+                offset: const Offset(3, 3),
               ),
             ],
           ),
@@ -100,65 +118,99 @@ Widget _buildDoctorCard(DoctorModel doctor) {
                 child: CachedNetworkImage(
                   imageUrl: doctor.profileImageUrl ?? '',
                   width: double.infinity,
-                  height: 140,
+                  height: 100,
                   fit: BoxFit.cover,
                   placeholder:
                       (context, url) => Container(
-                        height: 140,
-                        color: Colors.grey[200],
+                        height: 100,
+                        color: const Color.fromARGB(255, 178, 178, 178),
                         child: const Center(
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       ),
                   errorWidget:
                       (context, url, error) => Container(
-                        height: 140,
+                        height: 100,
                         color: Colors.grey[200],
                         child: const Icon(
                           Icons.person,
-                          size: 60,
+                          size: 40,
                           color: Colors.grey,
                         ),
                       ),
                 ),
               ),
 
-              // Doctor Info
+              // Doctor Info - FIXED LAYOUT
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      doctor.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                    // Doctor Name
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              doctor.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ),
+                          if (doctor.totalRatings > 0)
+                            Row(
+                              children: [
+                                Text(
+                                  doctor.averageRating.toStringAsFixed(1),
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.star,
+                                  size: 12,
+                                  color: Colors.amber,
+                                ),
+                              ],
+                            ),
+                        ],
                       ),
-                    ),
                     const SizedBox(height: 4),
-                    Text(
-                      doctor.specialist,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                    ),
-                    const SizedBox(height: 8),
+                    // Specialist and Experience in same row
                     Row(
                       children: [
-                        Icon(
-                          Icons.work_outline,
-                          size: 14,
-                          color: Colors.grey[500],
+                        Expanded(
+                          child: Text(
+                            doctor.specialist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 4),
+                        Icon(
+                          Icons.work_rounded,
+                          size: 15,
+                          color: Colors.blueGrey,
+                        ),
+                        const SizedBox(width: 5),
                         Text(
-                          '${doctor.experience} years',
+                          '${doctor.experience}yr',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.grey[600],
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueGrey,
                           ),
                         ),
                       ],

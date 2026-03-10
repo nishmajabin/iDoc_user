@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_state.dart';
-import 'package:idoc_user/presentation/screens/home/widgets/doctor_event.dart';
+import 'package:idoc_user/logic/blocs/doctors/doctor_event.dart';
 
 class DoctorSearchBar extends StatelessWidget {
   const DoctorSearchBar({super.key});

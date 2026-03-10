@@ -7,6 +7,9 @@ import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/do
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_header.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_info_section.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_license_section.dart';
+import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_rating_section.dart';
+import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/rating_display.dart';
+import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_consultation_fee_section.dart';
 
 class DoctorDetailContent extends StatelessWidget {
   final DoctorModel doctor;
@@ -51,6 +54,10 @@ class _DoctorDetailsBody extends StatelessWidget {
             _DoctorNameAndSpecialty(doctor: doctor),
             const SizedBox(height: 24),
             DoctorInfoSection(doctor: doctor),
+            const SizedBox(height: 20),
+            DoctorConsultationFeeSection(doctor: doctor), // ← CONSULTATION FEE
+            const SizedBox(height: 24),
+            DoctorRatingSection(doctor: doctor),
             const SizedBox(height: 32),
             DoctorAboutSection(bio: doctor.bio),
             const SizedBox(height: 32),
@@ -58,11 +65,12 @@ class _DoctorDetailsBody extends StatelessWidget {
             const SizedBox(height: 32),
             DoctorLicenseSection(licenseNumber: doctor.licenseNumber),
             const SizedBox(height: 32),
-             BookAppointmentButton(
-              doctorId: doctor.id ?? '', 
+            BookAppointmentButton(
+              doctorId: doctor.id ?? '',
               doctorName: doctor.name,
               doctorSpecialist: doctor.specialist,
               doctorProfileImageUrl: doctor.profileImageUrl,
+              consultationFee: doctor.consultationFee, // ← PASS FEE
             ),
             const SizedBox(height: 24),
           ],
@@ -79,24 +87,38 @@ class _DoctorNameAndSpecialty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          doctor.name,
-          style: const TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.w700,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                doctor.name,
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                doctor.specialist,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          doctor.specialist,
-          style: TextStyle(
-            fontSize: 16,
-            color: AppColors.primaryColor,
-            fontWeight: FontWeight.w500,
-          ),
+        const SizedBox(width: 16),
+        RatingDisplay(
+          rating: doctor.averageRating,
+          totalRatings: doctor.totalRatings,
+          size: 18,
         ),
       ],
     );

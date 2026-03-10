@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:idoc_user/data/models/user_model.dart';
 import 'package:idoc_user/logic/blocs/splash/splash_bloc.dart';
 import 'package:idoc_user/logic/blocs/splash/splash_state.dart';
 import 'package:idoc_user/presentation/bottom_nav/bottom_screen.dart';
@@ -22,7 +23,7 @@ class SplashScreen extends StatelessWidget {
             if (currentUser != null) {
               // User is logged in, go to Home
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => BottomScreen()),
+                MaterialPageRoute(builder: (context) => const BottomScreen()),
               );
             } else {
               Navigator.of(context).pushReplacement(

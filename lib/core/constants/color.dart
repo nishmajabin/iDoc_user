@@ -10,5 +10,45 @@ class AppColors {
   static Color bgColor = Color(0xFFF7FAFF);
   static Color labelTextColor = Color.fromARGB(255, 62, 62, 62);
   static Color logRegLinkColor = Color(0xFF0D72A6);
-  // static color 
+
+  // ── Notification / Design-system colours ─────────────────────────────────
+  static const primary = Color(0xFF0077B6);
+  static const primaryLight = Color(0xFF90E0EF);
+  static const primarySurface = Color(0xFFE8F4FD);
+  static const accent = Color(0xFF00B4D8);
+  static const confirmed = Color(0xFF0096C7);
+  static const confirmedSurface = Color(0xFFE0F4FF);
+  static const pending = Color(0xFFE07B00);
+  static const pendingSurface = Color(0xFFFFF3E0);
+  static const completed = Color(0xFF2D9E6B);
+  static const completedSurface = Color(0xFFE8F8F1);
+  static const cancelled = Color(0xFFD13D3D);
+  static const cancelledSurface = Color(0xFFFFEBEB);
+  static const surface = Color(0xFFF7FBFF);
+  static const cardBg = Colors.white;
+  static const divider = Color(0xFFEEF2F7);
+  static const textPrimary = Color(0xFF1A2332);
+  static const textSecondary = Color(0xFF6B7A91);
+  static const textMuted = Color(0xFFADB8C9);
+  static const gradientStart = Color(0xFF052C40);
+  static const gradientEnd = Color(0xFF00B4D8);
+  static const bgBase = Color(0xFFF2F8FF);
+  static const shimmerBase = Color(0xFFE8F0F7);
+  static const shimmerHighlight = Color(0xFFF5F9FF);
+  static const videocall = Color(0xFF7B2FF7);
+    static  Color userBubble = primaryColor;
+  static  Color aiBubble = bgColor;
+  static  Color userBubbleText = bgColor;
+  static  Color aiBubbleText = labelTextColor;
+  static  Color inputBackground = bgColor;
+  static  Color sendButtonColor = accent;
+  static  Color timestampColor = skipColor;
+  static  Color typingDot = accent;
+  static  Color suggestionBorder = accent;
+  static  Color suggestionText = logRegLinkColor;
+  static  Color appBarBg = primaryColor;
+  static  Color chatBackground = bgColor;
+  static const Color dividerColor = Color(0xFFE8EEF4);
+  static const Color errorBubble = Color(0xFFFFEBEE);
+  static const Color errorText = Color(0xFFB71C1C);
 }

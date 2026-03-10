@@ -6,7 +6,7 @@ class DoctorModel {
   final String place;
   final String email;
   final String password;
-  final String? confirmPassword; // Added confirmPassword field (not stored in DB)
+  final String? confirmPassword;
   final String phone;
   final String gender;
   final String specialist;
@@ -18,6 +18,9 @@ class DoctorModel {
   final String status;
   final DateTime createdAt;
   final DateTime? updatedAt;
+  final double averageRating;
+  final int totalRatings;
+  final double consultationFee; // ← Auto-assigned by admin on approval
 
   DoctorModel({
     this.id,
@@ -25,7 +28,7 @@ class DoctorModel {
     required this.place,
     required this.email,
     required this.password,
-    this.confirmPassword, // Optional - only used for validation, not stored
+    this.confirmPassword,
     required this.phone,
     required this.gender,
     required this.specialist,
@@ -37,10 +40,11 @@ class DoctorModel {
     this.status = 'pending',
     DateTime? createdAt,
     this.updatedAt,
+    this.averageRating = 0.0,
+    this.totalRatings = 0,
+    this.consultationFee = 0.0, // Default before approval
   }) : createdAt = createdAt ?? DateTime.now();
 
-  // Convert DoctorModel to Map for Firebase
-  // Note: confirmPassword is NOT included as it's only for validation
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -58,10 +62,12 @@ class DoctorModel {
       'status': status,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      'averageRating': averageRating,
+      'totalRatings': totalRatings,
+      'consultationFee': consultationFee,
     };
   }
 
-  // Create DoctorModel from Firebase document
   factory DoctorModel.fromMap(Map<String, dynamic> map, String documentId) {
     return DoctorModel(
       id: documentId,
@@ -69,7 +75,6 @@ class DoctorModel {
       place: map['place'] ?? '',
       email: map['email'] ?? '',
       password: map['password'] ?? '',
-      // confirmPassword is not retrieved from DB
       phone: map['phone'] ?? '',
       gender: map['gender'] ?? '',
       specialist: map['specialist'] ?? '',
@@ -81,10 +86,12 @@ class DoctorModel {
       status: map['status'] ?? 'pending',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (map['updatedAt'] as Timestamp?)?.toDate(),
+      averageRating: (map['averageRating'] ?? 0.0).toDouble(),
+      totalRatings: map['totalRatings'] ?? 0,
+      consultationFee: (map['consultationFee'] ?? 0.0).toDouble(), // ← Read from Firestore
     );
   }
 
-  // Create a copy with updated fields
   DoctorModel copyWith({
     String? id,
     String? name,
@@ -103,6 +110,9 @@ class DoctorModel {
     String? status,
     DateTime? createdAt,
     DateTime? updatedAt,
+    double? averageRating,
+    int? totalRatings,
+    double? consultationFee,
   }) {
     return DoctorModel(
       id: id ?? this.id,
@@ -122,16 +132,18 @@ class DoctorModel {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      averageRating: averageRating ?? this.averageRating,
+      totalRatings: totalRatings ?? this.totalRatings,
+      consultationFee: consultationFee ?? this.consultationFee,
     );
   }
 
-  // Validate if password and confirmPassword match
   bool validatePasswords() {
     return confirmPassword != null && password == confirmPassword;
   }
 
   @override
   String toString() {
-    return 'DoctorModel(id: $id, name: $name, email: $email, specialist: $specialist, status: $status)';
+    return 'DoctorModel(id: $id, name: $name, specialist: $specialist, fee: ₹$consultationFee)';
   }
 }

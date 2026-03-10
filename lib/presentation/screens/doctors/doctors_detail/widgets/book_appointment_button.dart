@@ -7,6 +7,7 @@ class BookAppointmentButton extends StatelessWidget {
   final String? doctorName;
   final String? doctorSpecialist;
   final String? doctorProfileImageUrl;
+  final double consultationFee;
 
   const BookAppointmentButton({
     Key? key,
@@ -14,6 +15,7 @@ class BookAppointmentButton extends StatelessWidget {
     this.doctorName,
     this.doctorSpecialist,
     this.doctorProfileImageUrl,
+    required this.consultationFee,
   }) : super(key: key);
 
   @override
@@ -50,6 +52,7 @@ class BookAppointmentButton extends StatelessWidget {
           doctorName: doctorName,
           doctorSpecialist: doctorSpecialist,
           doctorProfileImageUrl: doctorProfileImageUrl,
+          consultationFee: consultationFee,
         ),
       ),
     );

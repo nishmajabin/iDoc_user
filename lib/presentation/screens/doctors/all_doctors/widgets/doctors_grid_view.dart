@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_state.dart';
 import 'package:idoc_user/presentation/screens/doctors/all_doctors/widgets/doctor_grid_card.dart';
-import 'package:idoc_user/presentation/screens/home/widgets/doctor_event.dart';
+import 'package:idoc_user/logic/blocs/doctors/doctor_event.dart';
 
 class DoctorsGridView extends StatelessWidget {
   const DoctorsGridView({super.key});

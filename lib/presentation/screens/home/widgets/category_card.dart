@@ -1,6 +1,7 @@
 // lib/presentation/screens/home/widgets/category_card.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:idoc_user/core/constants/color.dart';
 
 Widget buildCategoryCard(String imageUrl, String label, {VoidCallback? onTap}) {
   return GestureDetector(
@@ -13,9 +14,9 @@ Widget buildCategoryCard(String imageUrl, String label, {VoidCallback? onTap}) {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColors.primaryColor.withValues(alpha: 0.4),
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: const Offset(3, 3),
           ),
         ],
       ),
@@ -27,18 +28,20 @@ Widget buildCategoryCard(String imageUrl, String label, {VoidCallback? onTap}) {
             width: 40,
             height: 40,
             fit: BoxFit.contain,
-            placeholder: (context, url) => const SizedBox(
-              width: 40,
-              height: 40,
-              child: Center(
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-            errorWidget: (context, url, error) => const Icon(
-              Icons.medical_services,
-              size: 40,
-              color: Colors.grey,
-            ),
+            placeholder:
+                (context, url) => const SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+            errorWidget:
+                (context, url, error) => const Icon(
+                  Icons.medical_services,
+                  size: 40,
+                  color: Colors.grey,
+                ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -46,10 +49,7 @@ Widget buildCategoryCard(String imageUrl, String label, {VoidCallback? onTap}) {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
           ),
         ],
       ),

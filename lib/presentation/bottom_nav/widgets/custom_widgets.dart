@@ -1,11 +1,13 @@
  import 'package:flutter/material.dart';
+import 'package:idoc_user/data/models/user_model.dart';
 import 'package:idoc_user/presentation/screens/available_specialists/available_specialists_screen.dart';
 import 'package:idoc_user/presentation/screens/home/home_screen.dart';
 
-  Widget buildBody(int currentIndex) {
+  Widget buildBody(int currentIndex, UserModel user) {
+   
     switch (currentIndex) {
       case 0:
-        return HomeScreen();
+        return HomeScreen(user: user,);
       case 1:
         return AvailableSpecialistsScreen();
       case 2:
@@ -13,7 +15,7 @@ import 'package:idoc_user/presentation/screens/home/home_screen.dart';
       case 3:
         return buildProfileContent();
       default:
-        return HomeScreen();
+        return HomeScreen(user:user );
     }
   }
 
