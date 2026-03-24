@@ -20,7 +20,7 @@ class DoctorModel {
   final DateTime? updatedAt;
   final double averageRating;
   final int totalRatings;
-  final double consultationFee; // ← Auto-assigned by admin on approval
+  final double consultationFee;
 
   DoctorModel({
     this.id,
@@ -42,7 +42,7 @@ class DoctorModel {
     this.updatedAt,
     this.averageRating = 0.0,
     this.totalRatings = 0,
-    this.consultationFee = 0.0, // Default before approval
+    this.consultationFee = 0.0,
   }) : createdAt = createdAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
@@ -88,7 +88,7 @@ class DoctorModel {
       updatedAt: (map['updatedAt'] as Timestamp?)?.toDate(),
       averageRating: (map['averageRating'] ?? 0.0).toDouble(),
       totalRatings: map['totalRatings'] ?? 0,
-      consultationFee: (map['consultationFee'] ?? 0.0).toDouble(), // ← Read from Firestore
+      consultationFee: (map['consultationFee'] ?? 0.0).toDouble(), 
     );
   }
 

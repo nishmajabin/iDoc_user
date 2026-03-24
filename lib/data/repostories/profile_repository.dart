@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:idoc_user/data/services/cloudinary_service.dart';
 import 'package:idoc_user/data/services/profile_firestore_service.dart';
 import 'package:idoc_user/logic/blocs/profile/profile_state.dart';
@@ -6,12 +7,15 @@ import 'package:idoc_user/logic/blocs/profile/profile_state.dart';
 class ProfileRepository {
   final ProfileFirestoreService _firestoreService;
   final CloudinaryService _cloudinaryService;
+  final FirebaseAuth _auth;
 
   ProfileRepository({
     ProfileFirestoreService? firestoreService,
     CloudinaryService? cloudinaryService,
+    FirebaseAuth? auth,
   })  : _firestoreService = firestoreService ?? ProfileFirestoreService(),
-        _cloudinaryService = cloudinaryService ?? CloudinaryService();
+        _cloudinaryService = cloudinaryService ?? CloudinaryService(),
+        _auth = auth ?? FirebaseAuth.instance;
 
   Future<ProfileSuccess> fetchUserProfile() async {
     final userData = await _firestoreService.getUserProfile();
@@ -31,7 +35,7 @@ class ProfileRepository {
     );
 
     final user = await _firestoreService.getCurrentUser();
-    
+
     return ProfileSuccess(
       name: name,
       email: user['email'] as String,
@@ -64,13 +68,17 @@ class ProfileRepository {
     if (currentState is ProfileSuccess) {
       return currentState;
     }
-    
+
     try {
       final userData = await _firestoreService.getUserProfile();
       return _mapToProfileSuccess(userData);
     } catch (e) {
       return null;
     }
+  }
+
+  Future<void> logout() async {
+    await _auth.signOut();
   }
 
   ProfileSuccess _mapToProfileSuccess(Map<String, dynamic> data) {

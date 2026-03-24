@@ -15,7 +15,7 @@ class HomeBodySection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HomeHeader(user: user),
-          const SizedBox(height: 100),
+          const SizedBox(height: 120),
           const HomeCategoriesSection(),
           const SizedBox(height: 15),
           const HomeDoctorsSection(),

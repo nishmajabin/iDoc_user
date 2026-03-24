@@ -4,6 +4,8 @@ class RatingModel {
   final String? id;
   final String doctorId;
   final String userId;
+  final String? userName;        
+  final String? userProfileImage; 
   final double rating;
   final String? review;
   final DateTime createdAt;
@@ -13,6 +15,8 @@ class RatingModel {
     this.id,
     required this.doctorId,
     required this.userId,
+    this.userName,
+    this.userProfileImage,
     required this.rating,
     this.review,
     DateTime? createdAt,
@@ -35,6 +39,8 @@ class RatingModel {
       id: documentId,
       doctorId: map['doctorId'] ?? '',
       userId: map['userId'] ?? '',
+      userName: map['userName'],           
+      userProfileImage: map['userProfileImage'],
       rating: (map['rating'] ?? 0.0).toDouble(),
       review: map['review'],
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -42,10 +48,26 @@ class RatingModel {
     );
   }
 
+  RatingModel withUserInfo({String? name, String? profileImage}) {
+    return RatingModel(
+      id: id,
+      doctorId: doctorId,
+      userId: userId,
+      userName: name,
+      userProfileImage: profileImage,
+      rating: rating,
+      review: review,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+
   RatingModel copyWith({
     String? id,
     String? doctorId,
     String? userId,
+    String? userName,
+    String? userProfileImage,
     double? rating,
     String? review,
     DateTime? createdAt,
@@ -55,6 +77,8 @@ class RatingModel {
       id: id ?? this.id,
       doctorId: doctorId ?? this.doctorId,
       userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userProfileImage: userProfileImage ?? this.userProfileImage,
       rating: rating ?? this.rating,
       review: review ?? this.review,
       createdAt: createdAt ?? this.createdAt,

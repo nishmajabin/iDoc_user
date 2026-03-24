@@ -44,18 +44,21 @@ class CategoriesGridHome extends StatelessWidget {
           final displayCategories = categories.take(4).toList();
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: displayCategories
-                  .map((category) => buildCategoryCard(
-                        category.imageUrl,
-                        category.name,
-                        onTap: () {
-                          // Navigate to category details
-                        },
-                      ))
-                  .toList(),
+              children:
+                  displayCategories
+                      .map(
+                        (category) => buildCategoryCard(
+                          category.imageUrl,
+                          category.name,
+                          onTap: () {
+                            // Navigate to category details
+                          },
+                        ),
+                      )
+                      .toList(),
             ),
           );
         }

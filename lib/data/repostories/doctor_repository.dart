@@ -79,6 +79,27 @@ class DoctorRepository {
     }
   }
 
+  /// Load top-rated doctors (top 5 by averageRating)
+  Future<List<DoctorModel>> loadTopRatedDoctors({int limit = 5}) async {
+    try {
+      final snapshot = await _firestore
+          .collection('doctors')
+          .where('status', isEqualTo: 'approved')
+          .orderBy('averageRating', descending: true)
+          .limit(limit)
+          .get();
+
+      // Filter out doctors with 0 rating (no reviews yet)
+      return snapshot.docs
+          .map((doc) => DoctorModel.fromMap(doc.data(), doc.id))
+          .where((doctor) => doctor.averageRating > 0)
+          .toList();
+    } catch (e) {
+      log('Error loading top-rated doctors: $e');
+      return [];
+    }
+  }
+
   /// Stream approved doctors
   Stream<List<DoctorModel>> approvedDoctorsStream() {
     return _firestore

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:idoc_user/data/services/ai_chat/groq_chat_service.dart';
+import 'package:idoc_user/data/services/ai_chat/openrouter_chat_service.dart';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/ai_chat_bloc.dart';
-import 'package:idoc_user/presentation/screens/ai_chat_bot/chat_ai_repository.dart';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/chat_repository_impl.dart';
-import 'package:idoc_user/presentation/screens/ai_chat_bot/gemini_chat_service.dart';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/medical_chat_screen.dart';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/send_message_usecase.dart';
 
@@ -26,18 +26,33 @@ class MedicalChatFactory {
   MedicalChatFactory._();
 
   static Widget create() {
-    final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
+    // ── Read API keys from .env (NEVER hardcode!) ────────────────────────
+    final groqApiKey = dotenv.env['GROQ_API_KEY'] ?? '';
+    final openRouterApiKey = dotenv.env['OPEN_ROUTER_API_KEY'] ?? '';
 
     assert(
-      apiKey.isNotEmpty,
-      'GEMINI_API_KEY is not set in your .env file.\n'
-      'Add: GEMINI_API_KEY=AIza...\n'
-      'See: https://aistudio.google.com/apikey',
+      groqApiKey.isNotEmpty,
+      'GROQ_API_KEY is not set in your .env file.\n'
+      'Add: GROQ_API_KEY=gsk_...\n'
+      'Get one from: https://console.groq.com',
     );
 
-    final service = MedicalGeminiApiService(apiKey: apiKey);
-    final MedicalChatRepository repository =
-        MedicalChatRepositoryImpl(service);
+    assert(
+      openRouterApiKey.isNotEmpty,
+      'OPEN_ROUTER_API_KEY is not set in your .env file.\n'
+      'Add: OPEN_ROUTER_API_KEY=sk-or-...\n'
+      'Get one from: https://openrouter.ai/keys',
+    );
+
+    // ── Create services ─────────────────────────────────────────────────
+    final groqService = GroqChatService(apiKey: groqApiKey);
+    final openRouterService = OpenRouterChatService(apiKey: openRouterApiKey);
+
+    // ── Repository with fallback: Groq → OpenRouter ─────────────────────
+    final repository = MedicalChatRepositoryImpl(
+      primary: groqService,
+      fallback: openRouterService,
+    );
 
     return BlocProvider(
       create: (_) => MedicalChatBloc(

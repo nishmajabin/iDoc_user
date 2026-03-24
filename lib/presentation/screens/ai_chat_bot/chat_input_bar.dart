@@ -3,19 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:idoc_user/core/constants/color.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// Chat input bar with:
+/// - Debounced send button (300 ms) to prevent rapid double-taps
+/// - Clean image-attach flow: image bytes are returned via [onImagePicked]
+///   instead of the [onSend] sentinel hack that was leaking into the BLoC
+/// - No API calls triggered by image selection
 class ChatInputBar extends StatefulWidget {
+  /// Called when the user taps Send with a text message.
+  /// [imageBytes] is non-null when a pending image is also attached.
   final void Function(String message, {Uint8List? imageBytes}) onSend;
+
+  /// Called when the user picks an image from gallery / camera.
+  /// The parent widget should dispatch [ImageAttachedEvent] with these bytes.
+  final void Function(Uint8List bytes)? onImagePicked;
+
   final bool isLoading;
 
-  /// Currently pending image (managed by BLoC, passed in for display)
+  /// Currently pending image (managed by BLoC, passed in for display only).
   final Uint8List? pendingImage;
 
-  /// Called when user taps × to remove the pending image
+  /// Called when user taps × to remove the pending image.
   final VoidCallback? onImageRemoved;
 
   const ChatInputBar({
     super.key,
     required this.onSend,
+    this.onImagePicked,
     this.isLoading = false,
     this.pendingImage,
     this.onImageRemoved,
@@ -30,6 +43,10 @@ class _ChatInputBarState extends State<ChatInputBar> {
   final _focusNode = FocusNode();
   final _picker = ImagePicker();
   bool _hasText = false;
+
+  // Debounce: track when the last send happened so rapid taps are ignored.
+  DateTime? _lastSentAt;
+  static const _sendDebounce = Duration(milliseconds: 300);
 
   @override
   void initState() {
@@ -52,10 +69,18 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   void _send() {
     if (!_canSend) return;
+
+    // Debounce: ignore taps that come in faster than [_sendDebounce].
+    final now = DateTime.now();
+    if (_lastSentAt != null && now.difference(_lastSentAt!) < _sendDebounce) {
+      return;
+    }
+    _lastSentAt = now;
+
     final text = _controller.text.trim();
-    // Allow sending image without text — use a default prompt in that case
     final effectiveText =
         text.isNotEmpty ? text : 'Please analyze this medical image.';
+
     widget.onSend(effectiveText, imageBytes: widget.pendingImage);
     _controller.clear();
     _focusNode.requestFocus();
@@ -71,10 +96,14 @@ class _ChatInputBarState extends State<ChatInputBar> {
       );
       if (picked == null) return;
       final bytes = await picked.readAsBytes();
-      // Bubble image bytes up so BLoC stores them in state
-      widget.onSend('__IMAGE_SELECTED__', imageBytes: bytes);
+
+      // ✅ FIX: Notify the parent via the dedicated [onImagePicked] callback
+      // so the parent dispatches ImageAttachedEvent. This replaces the old
+      // `onSend('__IMAGE_SELECTED__', imageBytes: bytes)` sentinel that
+      // risked leaking into the API call path.
+      widget.onImagePicked?.call(bytes);
     } catch (_) {
-      // Permission denied or picker cancelled — ignore silently
+      // Permission denied or picker cancelled — ignore silently.
     }
   }
 
@@ -92,7 +121,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Text(
+              Text(
                 'Attach Image',
                 style: TextStyle(
                   fontSize: 17,
@@ -101,12 +130,9 @@ class _ChatInputBarState extends State<ChatInputBar> {
                 ),
               ),
               const SizedBox(height: 4),
-               Text(
+              Text(
                 'Upload a medical image for AI analysis',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.skipColor,
-                ),
+                style: TextStyle(fontSize: 13, color: AppColors.skipColor),
               ),
               const SizedBox(height: 20),
               _SourceTile(
@@ -169,7 +195,6 @@ class _ChatInputBarState extends State<ChatInputBar> {
                     onTap: widget.isLoading ? null : _showImageSourceSheet,
                     hasImage: widget.pendingImage != null,
                   ),
-
                   const SizedBox(width: 8),
 
                   // Text field
@@ -189,7 +214,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                         focusNode: _focusNode,
                         maxLines: null,
                         textCapitalization: TextCapitalization.sentences,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           color: AppColors.labelTextColor,
                           height: 1.4,
@@ -198,7 +223,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                           hintText: widget.pendingImage != null
                               ? 'Ask about this image...'
                               : 'Ask me about your health...',
-                          hintStyle:  TextStyle(
+                          hintStyle: TextStyle(
                             color: AppColors.skipColor,
                             fontSize: 15,
                           ),
@@ -213,7 +238,6 @@ class _ChatInputBarState extends State<ChatInputBar> {
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 8),
 
                   // Send button
@@ -235,7 +259,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
 // ── Sub-widgets ───────────────────────────────────────────────────────────────
 
 class _ImagePreviewStrip extends StatelessWidget {
-  final dynamic imageBytes;
+  final Uint8List imageBytes;
   final VoidCallback? onRemove;
 
   const _ImagePreviewStrip({required this.imageBytes, this.onRemove});
@@ -256,7 +280,6 @@ class _ImagePreviewStrip extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          // Remove button
           GestureDetector(
             onTap: onRemove,
             child: Container(
@@ -270,7 +293,6 @@ class _ImagePreviewStrip extends StatelessWidget {
               child: const Icon(Icons.close, color: Colors.white, size: 16),
             ),
           ),
-          // Label badge
           Positioned(
             bottom: 8,
             left: 8,
@@ -371,7 +393,7 @@ class _SendButton extends StatelessWidget {
           onTap: canSend ? onTap : null,
           child: Center(
             child: isLoading
-                ?  SizedBox(
+                ? SizedBox(
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(
@@ -428,17 +450,14 @@ class _SourceTile extends StatelessWidget {
             const SizedBox(width: 14),
             Text(
               label,
-              style:  TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 color: AppColors.labelTextColor,
               ),
             ),
             const Spacer(),
-             Icon(
-              Icons.chevron_right_rounded,
-              color: AppColors.skipColor,
-            ),
+            Icon(Icons.chevron_right_rounded, color: AppColors.skipColor),
           ],
         ),
       ),

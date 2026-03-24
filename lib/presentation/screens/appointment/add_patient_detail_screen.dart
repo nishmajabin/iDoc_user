@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/logic/blocs/appointment/appointment_bloc.dart';
@@ -27,11 +28,18 @@ class PatientDetailsScreen extends StatefulWidget {
 }
 
 class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
-  final nameController = TextEditingController();
-  final contactController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  // Name controller is kept so the user can edit manually when the fetch
+  // fails or returns null (graceful fallback).
+  final _nameController = TextEditingController();
+  final _contactController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   late final AppointmentBloc _appointmentBloc;
+
+  /// True when we have a valid name from Firestore — the name field becomes
+  /// a read-only display card and the controller is no longer used.
+  bool _isNamePrefilled = false;
 
   @override
   void initState() {
@@ -39,16 +47,52 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
     _appointmentBloc = AppointmentBloc(
       appointmentService: context.read(),
     );
+    // Kick off the name fetch immediately using the logged-in user's uid.
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      _appointmentBloc.add(FetchPatientNameEvent(uid));
+    }
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    contactController.dispose();
-    descriptionController.dispose();
+    _nameController.dispose();
+    _contactController.dispose();
+    _descriptionController.dispose();
     _appointmentBloc.close();
     super.dispose();
   }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  /// The name that will be submitted — from Firestore if pre-filled,
+  /// otherwise from the manual text field.
+  String get _resolvedPatientName =>
+      _isNamePrefilled ? _nameController.text : _nameController.text.trim();
+
+  void _onNameFetched(String? name) {
+    if (name != null && name.isNotEmpty) {
+      _nameController.text = name;
+      setState(() => _isNamePrefilled = true);
+    } else {
+      // Name unavailable — keep the editable field, user types manually.
+      setState(() => _isNamePrefilled = false);
+    }
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      _appointmentBloc.add(
+        SetPatientDetailsEvent(
+          patientName: _resolvedPatientName,
+          contactNumber: _contactController.text.trim(),
+          description: _descriptionController.text.trim(),
+        ),
+      );
+    }
+  }
+
+  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +109,12 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
         ),
         body: BlocListener<AppointmentBloc, AppointmentState>(
           listener: (context, state) {
+            // Name fetched — update UI.
+            if (state is PatientNameFetched) {
+              _onNameFetched(state.patientName);
+            }
+
+            // Patient details confirmed — navigate to slot selection.
             if (state is PatientDetailsSet) {
               Navigator.push(
                 context,
@@ -87,19 +137,18 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Form(
-                key: formKey,
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Doctor Info Card
+                    // ── Doctor card ──────────────────────────────────────
                     _buildDoctorCard(),
                     const SizedBox(height: 24),
 
-                    // Consultation Fee Display
+                    // ── Consultation fee ─────────────────────────────────
                     ConsultationFeeDisplay(
                       consultationFee: widget.consultationFee,
                     ),
-
                     const SizedBox(height: 32),
 
                     Text(
@@ -110,28 +159,27 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
                         color: Colors.grey[800],
                       ),
                     ),
-
                     const SizedBox(height: 16),
 
-                    // Patient Name Field
-                    _buildTextField(
-                      controller: nameController,
-                      label: 'Patient Name',
-                      hint: 'Enter patient name',
-                      icon: Icons.person_outline,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter patient name';
+                    // ── Patient name — auto-fetched or manual ────────────
+                    BlocBuilder<AppointmentBloc, AppointmentState>(
+                      buildWhen: (prev, curr) =>
+                          curr is PatientNameLoading ||
+                          curr is PatientNameFetched,
+                      builder: (context, state) {
+                        if (state is PatientNameLoading) {
+                          return _buildNameShimmer();
                         }
-                        return null;
+                        return _isNamePrefilled
+                            ? _buildPrefilledNameCard()
+                            : _buildNameTextField();
                       },
                     ),
-
                     const SizedBox(height: 16),
 
-                    // Contact Number Field
+                    // ── Contact number ───────────────────────────────────
                     _buildTextField(
-                      controller: contactController,
+                      controller: _contactController,
                       label: 'Contact Number',
                       hint: 'Enter contact number',
                       icon: Icons.phone_outlined,
@@ -146,12 +194,11 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
                         return null;
                       },
                     ),
-
                     const SizedBox(height: 16),
 
-                    // Description Field
+                    // ── Reason for appointment ───────────────────────────
                     _buildTextField(
-                      controller: descriptionController,
+                      controller: _descriptionController,
                       label: 'Reason for Appointment',
                       hint: 'Describe your symptoms or reason for visit',
                       icon: Icons.description_outlined,
@@ -166,25 +213,14 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
                         return null;
                       },
                     ),
-
                     const SizedBox(height: 32),
 
-                    // Next Button
+                    // ── Next button ──────────────────────────────────────
                     SizedBox(
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            _appointmentBloc.add(
-                              SetPatientDetailsEvent(
-                                patientName: nameController.text.trim(),
-                                contactNumber: contactController.text.trim(),
-                                description: descriptionController.text.trim(),
-                              ),
-                            );
-                          }
-                        },
+                        onPressed: _submit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00D4FF),
                           foregroundColor: Colors.white,
@@ -209,6 +245,121 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  // ── Widgets ───────────────────────────────────────────────────────────────
+
+  /// Shown while the name is being fetched — matches the height of the
+  /// text field so there is no layout jump.
+  Widget _buildNameShimmer() {
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 16),
+          Icon(Icons.person_outline, color: Colors.grey[400]),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Container(
+              height: 14,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(7),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+    );
+  }
+
+  /// Shown when Firestore returned a valid name — read-only, clearly branded
+  /// with a "verified" badge so the user knows it came from their profile.
+  Widget _buildPrefilledNameCard() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF00D4FF).withOpacity(0.6)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.person_outline, color: Color(0xFF00D4FF)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Patient Name',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _nameController.text,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Badge indicating the name was pulled from the user's profile.
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFF00D4FF).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.verified_user_outlined,
+                    size: 12, color: Color(0xFF00D4FF)),
+                SizedBox(width: 4),
+                Text(
+                  'From Profile',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF00D4FF),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Fallback editable field shown when the name could not be fetched.
+  Widget _buildNameTextField() {
+    return _buildTextField(
+      controller: _nameController,
+      label: 'Patient Name',
+      hint: 'Enter patient name',
+      icon: Icons.person_outline,
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Please enter patient name';
+        }
+        return null;
+      },
     );
   }
 
@@ -260,10 +411,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
                 const SizedBox(height: 4),
                 Text(
                   widget.doctorSpecialist ?? 'Specialist',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -274,11 +422,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
               color: Colors.red.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.favorite,
-              color: Colors.red,
-              size: 20,
-            ),
+            child: const Icon(Icons.favorite, color: Colors.red, size: 20),
           ),
         ],
       ),

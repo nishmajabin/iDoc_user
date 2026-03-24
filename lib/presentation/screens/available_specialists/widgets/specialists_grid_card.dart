@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:idoc_user/core/constants/color.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/doctor_detail_screen.dart';
 
@@ -11,28 +12,31 @@ class SpecialistsGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DoctorDetailScreen(doctorId: doctor.id!),
-            ),
-          ),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DoctorDetailScreen(doctorId: doctor.id!),
+        ),
+      ),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 251, 253, 255),
-          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryColor.withValues(alpha: 0.4),
-              blurRadius: 4,
-              offset: const Offset(3, 3),
+              color: AppColors.primaryColor.withValues(alpha: 0.12),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
+        // ── Use a Column where image is Expanded, info is fixed ──────────────
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [_buildDoctorImage(), _buildDoctorInfo()],
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: _buildDoctorImage()),
+            _buildDoctorInfo(),
+          ],
         ),
       ),
     );
@@ -40,54 +44,73 @@ class SpecialistsGridCard extends StatelessWidget {
 
   Widget _buildDoctorImage() {
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: CachedNetworkImage(
         imageUrl: doctor.profileImageUrl ?? '',
         width: double.infinity,
-        height: 110,
         fit: BoxFit.cover,
-        placeholder:
-            (context, url) => Container(
-              height: 140,
-              color: Colors.grey[200],
-              child: const Center(
-                child: CircularProgressIndicator(strokeWidth: 1),
-              ),
+        placeholder: (context, url) => Container(
+          color: const Color(0xFFEEF5FF),
+          child: const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 1.5,
+              color: Color(0xFF0077B6),
             ),
-        errorWidget:
-            (context, url, error) => Container(
-              height: 140,
-              color: Colors.grey[200],
-              child: const Icon(Icons.person, size: 60, color: Colors.grey),
-            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: const Color(0xFFEEF5FF),
+          child: const Center(
+            child: Icon(Icons.person_rounded, size: 44, color: Color(0xFFB0C8E0)),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildDoctorInfo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Center(
-        child: Column(
-          children: [
-            Text(
-              doctor.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primaryColor,
-              ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Dr. ${doctor.name}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primaryColor,
+              letterSpacing: -0.2,
             ),
-            Text(
+          ),
+          const SizedBox(height: 3),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F4FD),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
               doctor.specialist,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: 9.5,
+                color: const Color(0xFF0077B6),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

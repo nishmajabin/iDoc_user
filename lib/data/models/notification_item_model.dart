@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-/// Notification types used for icon/color mapping and navigation.
 enum NotificationType {
   appointmentConfirmed,
   appointmentReminder,
@@ -10,8 +9,6 @@ enum NotificationType {
   general,
 }
 
-/// A single persisted notification record stored in Firestore under
-/// `users/{userId}/notifications/{notificationId}`.
 class NotificationItemModel extends Equatable {
   final String notificationId;
   final String userId;
@@ -21,7 +18,6 @@ class NotificationItemModel extends Equatable {
   final DateTime timestamp;
   final bool isRead;
 
-  /// Optional deep-link data (e.g. appointmentId, chatRoomId, doctorId).
   final Map<String, dynamic>? data;
 
   const NotificationItemModel({
@@ -35,7 +31,6 @@ class NotificationItemModel extends Equatable {
     this.data,
   });
 
-  // ── Firestore serialisation ───────────────────────────────────────────────
 
   factory NotificationItemModel.fromFirestore(DocumentSnapshot doc) {
     final d = doc.data() as Map<String, dynamic>;
@@ -65,7 +60,6 @@ class NotificationItemModel extends Equatable {
     };
   }
 
-  // ── Copy ───────────────────────────────────────────────────────────────────
 
   NotificationItemModel copyWith({
     String? notificationId,
@@ -89,7 +83,6 @@ class NotificationItemModel extends Equatable {
     );
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
 
   static NotificationType _typeFromString(String value) {
     switch (value) {

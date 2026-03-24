@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-/// Must remain structurally identical to the doctor app's ChatMessageModel.
-/// Field names are a contract — changing them breaks cross-app messaging.
 class ChatMessageModel extends Equatable {
   final String messageId;
   final String senderId;

@@ -21,7 +21,7 @@ class HomeCategoriesSection extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         const CategoriesGridHome(),
       ],
     );

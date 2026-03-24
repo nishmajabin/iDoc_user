@@ -11,7 +11,6 @@ class AppColors {
   static Color labelTextColor = Color.fromARGB(255, 62, 62, 62);
   static Color logRegLinkColor = Color(0xFF0D72A6);
 
-  // ── Notification / Design-system colours ─────────────────────────────────
   static const primary = Color(0xFF0077B6);
   static const primaryLight = Color(0xFF90E0EF);
   static const primarySurface = Color(0xFFE8F4FD);
@@ -36,7 +35,7 @@ class AppColors {
   static const shimmerBase = Color(0xFFE8F0F7);
   static const shimmerHighlight = Color(0xFFF5F9FF);
   static const videocall = Color(0xFF7B2FF7);
-    static  Color userBubble = primaryColor;
+  static  Color userBubble = primaryColor;
   static  Color aiBubble = bgColor;
   static  Color userBubbleText = bgColor;
   static  Color aiBubbleText = labelTextColor;

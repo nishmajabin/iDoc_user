@@ -1,7 +1,13 @@
 import 'dart:typed_data';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/chat_message.dart';
 
-
+/// Data model extension of [MedicalChatMessage].
+///
+/// Previously parsed Gemini-specific responses. Now the parsing is done
+/// inside each [ChatApiService] implementation (Groq, OpenRouter, etc.)
+/// since they all use the same OpenAI-compatible response format.
+///
+/// This model is retained for backward compatibility and utility helpers.
 class MedicalChatMessageModel extends MedicalChatMessage {
   const MedicalChatMessageModel({
     required super.id,
@@ -12,36 +18,28 @@ class MedicalChatMessageModel extends MedicalChatMessage {
     super.imageBytes,
   });
 
-  /// Parse a successful Gemini REST response body.
+  /// Parse an OpenAI-compatible chat completion response.
   ///
-  /// Gemini response shape:
+  /// Response shape (Groq / OpenRouter):
   /// {
-  ///   "candidates": [{
-  ///     "content": {
-  ///       "parts": [{ "text": "..." }],
-  ///       "role": "model"
+  ///   "choices": [{
+  ///     "message": {
+  ///       "role": "assistant",
+  ///       "content": "..."
   ///     }
   ///   }]
   /// }
-  factory MedicalChatMessageModel.fromGeminiResponse(
+  factory MedicalChatMessageModel.fromChatCompletion(
     Map<String, dynamic> json,
     String messageId,
   ) {
     String extractedText = 'No response received.';
 
     try {
-      final candidates = json['candidates'] as List?;
-      if (candidates != null && candidates.isNotEmpty) {
-        final content = candidates[0]['content'] as Map<String, dynamic>?;
-        final parts = content?['parts'] as List?;
-        if (parts != null && parts.isNotEmpty) {
-          extractedText = parts[0]['text'] as String? ?? extractedText;
-        }
-      }
-      // Fallback: some older model versions use 'output' directly
-      if (extractedText == 'No response received.' &&
-          json['candidates']?[0]?['output'] != null) {
-        extractedText = json['candidates'][0]['output'].toString();
+      final choices = json['choices'] as List?;
+      if (choices != null && choices.isNotEmpty) {
+        final message = choices[0]['message'] as Map<String, dynamic>?;
+        extractedText = message?['content'] as String? ?? extractedText;
       }
     } catch (_) {}
 

@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-/// Read from Firestore by the patient.
-/// Written by the doctor app when they initiate from PatientDetailScreen.
-/// Field names must not change — they are shared across both apps.
 class ChatRoomModel extends Equatable {
   final String chatRoomId;
   final String doctorId;

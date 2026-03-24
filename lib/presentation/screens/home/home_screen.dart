@@ -7,6 +7,8 @@ import 'package:idoc_user/logic/blocs/category/category_bloc.dart';
 import 'package:idoc_user/logic/blocs/category/category_event.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_event.dart';
+import 'package:idoc_user/logic/blocs/featured_doctors/featured_doctors_bloc.dart';
+import 'package:idoc_user/logic/blocs/featured_doctors/featured_doctors_event.dart';
 import 'package:idoc_user/presentation/screens/home/widgets/home_body.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,6 +20,7 @@ class HomeScreen extends StatelessWidget {
     // Load data when screen builds
     context.read<CategoryBloc>().add(LoadCategoriesEvent());
     context.read<DoctorBloc>().add(LoadAllDoctorsEvent());
+    context.read<FeaturedDoctorsBloc>().add(LoadFeaturedDoctorsEvent());
 
     return BlocBuilder<BottomNavBloc, BottomNavState>(
       builder: (context, state) {

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:idoc_user/data/models/user_model.dart';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/medical_chat_factory.dart';
 import 'package:idoc_user/presentation/screens/chat/patient_chat_room_list_screen.dart';
-import 'package:idoc_user/presentation/screens/home/widgets/custom_carousel.dart';
+import 'package:idoc_user/presentation/screens/home/widgets/featured_doctors_carousel.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:idoc_user/presentation/screens/doctors/favorite_doctors_screen.dart';
 
@@ -34,7 +33,12 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(top: 170, left: 0, right: 0, child: buildCarousel([])),
+        const Positioned(
+          top: 170,
+          left: 0,
+          right: 0,
+          child: FeaturedDoctorsCarousel(),
+        ),
       ],
     );
   }
@@ -65,7 +69,6 @@ class HomeHeader extends StatelessWidget {
 
   Widget _buildActions() {
     return Builder(
-      // Use Builder to get context if needed, though Stateless has it in build
       builder: (context) {
         return Row(
           children: [
@@ -83,11 +86,11 @@ class HomeHeader extends StatelessWidget {
             IconButton(
               onPressed: () {
                 Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => MedicalChatFactory.create(),
-  ),
-);
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MedicalChatFactory.create(),
+                  ),
+                );
               },
               icon: const Icon(CupertinoIcons.chat_bubble_2_fill, size: 28),
             ),
@@ -95,12 +98,11 @@ class HomeHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder:
-                        (context) => PatientChatRoomListScreen(
-                          patientId: user.uid,
-                          patientName: user.name,
-                          patientProfileImageUrl: user.profileImageUrl,
-                        ),
+                    builder: (context) => PatientChatRoomListScreen(
+                      patientId: user.uid,
+                      patientName: user.name,
+                      patientProfileImageUrl: user.profileImageUrl,
+                    ),
                   ),
                 );
               },

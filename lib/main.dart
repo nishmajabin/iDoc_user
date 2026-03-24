@@ -29,6 +29,7 @@ import 'package:idoc_user/logic/blocs/category/category_event.dart';
 import 'package:idoc_user/logic/blocs/chat/chat_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctor_detail/doctor_detail_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_bloc.dart';
+import 'package:idoc_user/logic/blocs/featured_doctors/featured_doctors_bloc.dart';
 import 'package:idoc_user/logic/blocs/favorites/favorites_bloc.dart';
 import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:idoc_user/logic/blocs/notification/notification_bloc.dart';
@@ -36,6 +37,7 @@ import 'package:idoc_user/logic/blocs/notification/notification_event.dart';
 import 'package:idoc_user/logic/blocs/notification_history/notification_history_bloc.dart';
 import 'package:idoc_user/logic/blocs/payment/payment_bloc.dart';
 import 'package:idoc_user/logic/blocs/profile/profile_bloc.dart';
+import 'package:idoc_user/logic/blocs/settings/settings_bloc.dart';
 import 'package:idoc_user/logic/blocs/splash/splash_bloc.dart';
 import 'package:idoc_user/logic/blocs/splash/splash_event.dart';
 import 'package:idoc_user/presentation/screens/call/call_listener_wrapper.dart';
@@ -45,8 +47,6 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load(fileName: '.env');
-  // Initialize the notification service early so the background handler
-  // is registered before any FCM message arrives.
   await NotificationService.instance.initialize();
 
   runApp(const StudentApp());
@@ -109,6 +109,11 @@ class StudentApp extends StatelessWidget {
           BlocProvider(
             create: (context) => DoctorDetailBloc(DoctorRepository()),
           ),
+          BlocProvider<FeaturedDoctorsBloc>(
+            create: (context) => FeaturedDoctorsBloc(
+              context.read<DoctorRepository>(),
+            ),
+          ),
           BlocProvider<FavoritesBloc>(
             create:
                 (context) => FavoritesBloc(
@@ -143,24 +148,17 @@ class StudentApp extends StatelessWidget {
                   appId: AppConstants.agoraAppId,
                 ),
           ),
-      // ── Notification BLoCs ────────────────────────────────────────────
           BlocProvider(create: (context) => NotificationBloc()),
           BlocProvider(create: (context) => NotificationHistoryBloc()),
+          BlocProvider(create: (context) => SettingsBloc()),
         ],
 
-        // ── _AppRoot sits inside MultiBlocProvider so all blocs are available ──
         child: const _AppRoot(),
       ),
     );
   }
 }
 
-/// Bridges AuthBloc → UserCallBloc & NotificationBloc, and hosts MaterialApp.
-///
-/// Why a separate widget and not inline inside StudentApp.build()?
-/// Because BlocListener requires the blocs to already be in the widget tree
-/// above it. By putting _AppRoot as the child of MultiBlocProvider, every
-/// bloc listed above is accessible here via context.read / context.watch.
 class _AppRoot extends StatefulWidget {
   const _AppRoot();
 
@@ -169,8 +167,6 @@ class _AppRoot extends StatefulWidget {
 }
 
 class _AppRootState extends State<_AppRoot> {
-  /// Tracks which userId we are currently listening for, to avoid
-  /// resubscribing on every AuthBloc rebuild.
   String? _listeningUserId;
 
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
@@ -201,11 +197,11 @@ class _AppRootState extends State<_AppRoot> {
             final previousUid = _listeningUserId!;
             _listeningUserId = null;
             callBloc.add(const StopListeningForCalls());
-            debugPrint('🔴 [CallListener] Stopped — user logged out');
+            debugPrint('[CallListener] Stopped — user logged out');
 
             // Stop notifications and remove FCM token.
             notifBloc.add(StopNotifications(userId: previousUid));
-            debugPrint('🔴 [NotificationBloc] Stopped — user logged out');
+            debugPrint('[NotificationBloc] Stopped — user logged out');
           }
         }
       },
@@ -215,11 +211,6 @@ class _AppRootState extends State<_AppRoot> {
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),
         navigatorKey: _navigatorKey,
-
-        // CallListenerWrapper lives in builder so it wraps the ENTIRE
-        // navigator and is never removed by any navigation call.
-        // It uses _navigatorKey to access the root OverlayState directly,
-        // bypassing the context-ancestry limitation of MaterialApp.builder.
         builder:
             (context, child) => CallListenerWrapper(
               navigatorKey: _navigatorKey,

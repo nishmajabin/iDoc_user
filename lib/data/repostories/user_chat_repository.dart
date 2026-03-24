@@ -2,24 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:idoc_user/data/models/chat_message_model.dart';
 import 'package:idoc_user/data/models/chat_room_model.dart';
 
-/// ─────────────────────────────────────────────────────────────────────────────
-/// UserChatRepository
-///
-/// Firestore contract (shared with doctor app — do NOT modify paths):
-///   Collection : chatRooms
-///   Document   : chatRooms/{chatRoomId}
-///   Sub-coll   : chatRooms/{chatRoomId}/messages/{messageId}
-///
-/// chatRoomId formula: "{doctorId}_{patientId}_{appointmentId}"
-/// This formula is LOCKED — it must match the doctor app exactly.
-/// ─────────────────────────────────────────────────────────────────────────────
 class UserChatRepository {
   final FirebaseFirestore _firestore;
 
   UserChatRepository({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  // ── ID generation (must stay identical to doctor app) ──────────────────────
 
   String generateChatRoomId({
     required String doctorId,
@@ -28,11 +15,6 @@ class UserChatRepository {
   }) =>
       '${doctorId}_${patientId}_$appointmentId';
 
-  // ── Chat room ───────────────────────────────────────────────────────────────
-
-  /// Stream a single room document.
-  /// Emits null when the doctor hasn't opened chat yet (room not created).
-  /// Emits ChatRoomModel once the doctor creates the room from their app.
   Stream<ChatRoomModel?> watchChatRoom({
     required String doctorId,
     required String patientId,
@@ -50,8 +32,6 @@ class UserChatRepository {
         .map((doc) => doc.exists ? ChatRoomModel.fromFirestore(doc) : null);
   }
 
-  /// All chat rooms for the current patient — client-side sorted.
-  /// Single-field where clause avoids composite index requirement.
   Stream<List<ChatRoomModel>> watchPatientChatRooms(String patientId) {
     return _firestore
         .collection('chatRooms')
@@ -60,7 +40,6 @@ class UserChatRepository {
         .map((snap) {
       final rooms =
           snap.docs.map((doc) => ChatRoomModel.fromFirestore(doc)).toList();
-      // Sort descending by lastMessageTime — most recent conversation first
       rooms.sort((a, b) {
         if (a.lastMessageTime == null && b.lastMessageTime == null) return 0;
         if (a.lastMessageTime == null) return 1;
@@ -71,9 +50,6 @@ class UserChatRepository {
     });
   }
 
-  // ── Messages ────────────────────────────────────────────────────────────────
-
-  /// Real-time stream — ascending timestamp so newest is at bottom.
   Stream<List<ChatMessageModel>> watchMessages(String chatRoomId) {
     return _firestore
         .collection('chatRooms')
@@ -84,9 +60,6 @@ class UserChatRepository {
         .map((snap) =>
             snap.docs.map((doc) => ChatMessageModel.fromFirestore(doc)).toList());
   }
-
-  /// Send patient → doctor message via atomic batch write.
-  /// Increments unreadCountDoctor (not patient) because patient is sending.
   Future<void> sendMessage({
     required String chatRoomId,
     required String senderId,   // patientId
@@ -125,8 +98,6 @@ class UserChatRepository {
     await batch.commit();
   }
 
-  /// Mark all messages sent by doctor (receiverId == patientId) as read.
-  /// Resets the patient's unread counter on the room document.
   Future<void> markMessagesAsRead({
     required String chatRoomId,
     required String patientId,

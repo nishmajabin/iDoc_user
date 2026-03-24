@@ -1,3 +1,300 @@
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:idoc_user/data/models/appointment_model.dart';
+// import 'package:idoc_user/data/services/appointment_service.dart';
+// import 'package:idoc_user/logic/blocs/appointment/appointment_event.dart';
+// import 'package:idoc_user/logic/blocs/appointment/appointment_state.dart';
+
+// class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
+//   final AppointmentService _appointmentService;
+
+//   String? _patientName, _contactNumber, _description;
+//   DateTime? _selectedDate;
+//   String? _selectedSlotId, _selectedStartTime, _selectedEndTime;
+//   List<Map<String, dynamic>> _availableSlots = [];
+
+//   AppointmentBloc({required AppointmentService appointmentService})
+//       : _appointmentService = appointmentService,
+//         super(const AppointmentInitial()) {
+//     on<FetchPatientNameEvent>(_onFetchPatientName);
+//     on<SetPatientDetailsEvent>(_onSetPatientDetails);
+//     on<FetchAvailableSlotsEvent>(_onFetchAvailableSlots);
+//     on<FetchAvailableSlotsRangeEvent>(_onFetchAvailableSlotsRange);
+//     on<FetchAllAvailableSlotsEvent>(_onFetchAllAvailableSlots);
+//     on<SelectDateEvent>(_onSelectDate);
+//     on<SelectSlotEvent>(_onSelectSlot);
+//     on<BookAppointmentEvent>(_onBookAppointment);
+//     on<ResetBookingEvent>(_onResetBooking);
+//     on<FetchUserAppointmentsEvent>(_onFetchUserAppointments);
+//     on<CancelAppointmentEvent>(_onCancelAppointment);
+//   }
+
+//   // ── Helpers ───────────────────────────────────────────────────────────────
+
+//   bool _isSlotInPast(DateTime slotDate, String startTime) {
+//     try {
+//       final parts =
+//           startTime.replaceAll(RegExp(r'[AP]M'), '').trim().split(':');
+//       int hour = int.parse(parts[0]);
+//       final minute = int.parse(parts[1]);
+//       if (startTime.contains('PM') && hour != 12) hour += 12;
+//       else if (startTime.contains('AM') && hour == 12) hour = 0;
+//       final slotDT = DateTime(
+//           slotDate.year, slotDate.month, slotDate.day, hour, minute);
+//       return slotDT.isBefore(DateTime.now().add(const Duration(minutes: 5)));
+//     } catch (_) {
+//       return true;
+//     }
+//   }
+
+//   bool _isTodaySlotInPast(DateTime date, String startTime) {
+//     final now = DateTime.now();
+//     final today = DateTime(now.year, now.month, now.day);
+//     final day = DateTime(date.year, date.month, date.day);
+//     return day.isAtSameMomentAs(today) && _isSlotInPast(date, startTime);
+//   }
+
+//   SlotsFetched _buildSlotsFetched(
+//           {DateTime? date,
+//           String? slotId,
+//           String? start,
+//           String? end}) =>
+//       SlotsFetched(
+//         slots: _availableSlots,
+//         selectedDate: date ?? _selectedDate!,
+//         patientName: _patientName,
+//         contactNumber: _contactNumber,
+//         description: _description,
+//         selectedSlotId: slotId,
+//         selectedStartTime: start,
+//         selectedEndTime: end,
+//       );
+
+//   String? _validateBooking() {
+//     if (_patientName == null || _patientName!.trim().isEmpty)
+//       return 'Patient name is required. Please go back and enter patient details.';
+//     if (_contactNumber == null || _contactNumber!.trim().isEmpty)
+//       return 'Contact number is required. Please go back and enter patient details.';
+//     if (_description == null || _description!.trim().isEmpty)
+//       return 'Description is required. Please go back and enter appointment details.';
+//     if (_selectedDate == null) return 'Please select an appointment date.';
+//     if (_selectedSlotId == null || _selectedSlotId!.trim().isEmpty)
+//       return 'Please select a time slot.';
+//     if (_selectedStartTime == null || _selectedStartTime!.trim().isEmpty)
+//       return 'Please select a time slot.';
+//     if (_selectedEndTime == null || _selectedEndTime!.trim().isEmpty)
+//       return 'Please select a time slot.';
+//     if (_isTodaySlotInPast(_selectedDate!, _selectedStartTime!))
+//       return 'Cannot book a time slot that has already passed. Please select a future time slot.';
+//     return null;
+//   }
+
+//   // ── Event Handlers ────────────────────────────────────────────────────────
+
+//   /// Fetches the logged-in user's name from Firestore and caches it in
+//   /// [_patientName] so [SetPatientDetailsEvent] can reference it later.
+//   ///
+//   /// Emits [PatientNameLoading] → [PatientNameFetched].
+//   /// Never emits [AppointmentError] — a missing/null name is not a hard
+//   /// failure; the UI will fall back to the editable text field instead.
+//   Future<void> _onFetchPatientName(
+//     FetchPatientNameEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     emit(const PatientNameLoading());
+//     final name = await _appointmentService.getUserName(event.userId);
+//     // Pre-populate so the bloc already knows the name if the user proceeds
+//     // without editing (name field is read-only when fetched successfully).
+//     if (name != null && name.trim().isNotEmpty) {
+//       _patientName = name.trim();
+//     }
+//     emit(PatientNameFetched(patientName: name?.trim()));
+//   }
+
+//   Future<void> _onSetPatientDetails(
+//     SetPatientDetailsEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     _patientName = event.patientName;
+//     _contactNumber = event.contactNumber;
+//     _description = event.description;
+//     emit(PatientDetailsSet(
+//       patientName: event.patientName,
+//       contactNumber: event.contactNumber,
+//       description: event.description,
+//     ));
+//   }
+
+//   Future<void> _onFetchAvailableSlots(
+//     FetchAvailableSlotsEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     try {
+//       emit(const AppointmentLoading());
+//       _selectedDate = event.date;
+//       _availableSlots = await _appointmentService.fetchAvailableSlots(
+//           doctorId: event.doctorId, date: event.date);
+//       emit(_buildSlotsFetched(date: event.date));
+//     } catch (e) {
+//       emit(AppointmentError('Failed to fetch slots: $e'));
+//     }
+//   }
+
+//   Future<void> _onFetchAvailableSlotsRange(
+//     FetchAvailableSlotsRangeEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     try {
+//       emit(const AppointmentLoading());
+//       _availableSlots =
+//           await _appointmentService.fetchAvailableSlotsForRange(
+//         doctorId: event.doctorId,
+//         startDate: event.startDate,
+//         endDate: event.endDate,
+//       );
+//       _selectedDate = _availableSlots.isNotEmpty
+//           ? _availableSlots.first['date'] as DateTime
+//           : event.startDate;
+//       emit(_buildSlotsFetched());
+//     } catch (e) {
+//       emit(AppointmentError('Failed to fetch slots: $e'));
+//     }
+//   }
+
+//   Future<void> _onFetchAllAvailableSlots(
+//     FetchAllAvailableSlotsEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     try {
+//       emit(const AppointmentLoading());
+//       _availableSlots = await _appointmentService.fetchAllAvailableSlots(
+//           doctorId: event.doctorId);
+//       final now = DateTime.now();
+//       _selectedDate = _availableSlots.isNotEmpty
+//           ? _availableSlots.first['date'] as DateTime
+//           : DateTime(now.year, now.month, now.day);
+//       emit(_buildSlotsFetched());
+//     } catch (e) {
+//       emit(AppointmentError('Failed to fetch slots: $e'));
+//     }
+//   }
+
+//   Future<void> _onSelectDate(
+//     SelectDateEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     _selectedDate = event.date;
+//     _selectedSlotId = _selectedStartTime = _selectedEndTime = null;
+//     emit(_buildSlotsFetched(date: event.date));
+//   }
+
+//   Future<void> _onSelectSlot(
+//     SelectSlotEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     if (_selectedDate != null &&
+//         _isTodaySlotInPast(_selectedDate!, event.startTime)) {
+//       emit(const AppointmentError(
+//           'This time slot has already passed. Please select a future time.'));
+//       return;
+//     }
+//     _selectedSlotId = event.slotId;
+//     _selectedStartTime = event.startTime;
+//     _selectedEndTime = event.endTime;
+//     if (state is SlotsFetched) {
+//       emit((state as SlotsFetched).copyWith(
+//         selectedSlotId: event.slotId,
+//         selectedStartTime: event.startTime,
+//         selectedEndTime: event.endTime,
+//         patientName: _patientName,
+//         contactNumber: _contactNumber,
+//         description: _description,
+//       ));
+//     }
+//   }
+
+//   Future<void> _onBookAppointment(
+//     BookAppointmentEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     final error = _validateBooking();
+//     if (error != null) {
+//       emit(AppointmentError(error));
+//       return;
+//     }
+
+//     try {
+//       emit(const AppointmentLoading());
+//       final appointmentId = await _appointmentService.bookAppointment(
+//         appointment: AppointmentModel(
+//           doctorId: event.doctorId,
+//           userId: event.userId,
+//           slotId: _selectedSlotId!,
+//           patientName: _patientName!,
+//           contactNumber: _contactNumber!,
+//           description: _description!,
+//           appointmentDate: _selectedDate!,
+//           startTime: _selectedStartTime!,
+//           endTime: _selectedEndTime!,
+//           status: 'confirmed',
+//           doctorName: event.doctorName,
+//           doctorSpecialist: event.doctorSpecialist,
+//           doctorProfileImageUrl: event.doctorProfileImageUrl,
+//         ),
+//       );
+//       emit(AppointmentBooked(
+//         appointmentId: appointmentId,
+//         doctorName: event.doctorName ?? 'Doctor',
+//         startTime: _selectedStartTime!,
+//         endTime: _selectedEndTime!,
+//         appointmentDate: _selectedDate!,
+//       ));
+//     } catch (e) {
+//       emit(AppointmentError('Failed to book appointment: $e'));
+//     }
+//   }
+
+//   Future<void> _onResetBooking(
+//     ResetBookingEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     _patientName = _contactNumber = _description = null;
+//     _selectedDate = null;
+//     _selectedSlotId = _selectedStartTime = _selectedEndTime = null;
+//     _availableSlots = [];
+//     emit(const AppointmentInitial());
+//   }
+
+//   Future<void> _onFetchUserAppointments(
+//     FetchUserAppointmentsEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     try {
+//       emit(const AppointmentLoading());
+//       emit(AppointmentsLoaded(
+//           appointments:
+//               await _appointmentService.getUserAppointments(event.userId)));
+//     } catch (e) {
+//       emit(AppointmentError('Failed to load appointments: $e'));
+//     }
+//   }
+
+//   Future<void> _onCancelAppointment(
+//     CancelAppointmentEvent event,
+//     Emitter<AppointmentState> emit,
+//   ) async {
+//     try {
+//       emit(const AppointmentLoading());
+//       await _appointmentService.cancelAppointment(
+//         appointmentId: event.appointmentId,
+//         doctorId: event.doctorId,
+//         slotId: event.slotId,
+//       );
+//       emit(const AppointmentInitial());
+//     } catch (e) {
+//       emit(AppointmentError('Failed to cancel appointment: $e'));
+//     }
+//   }
+// }
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/data/models/appointment_model.dart';
 import 'package:idoc_user/data/services/appointment_service.dart';
@@ -7,20 +304,15 @@ import 'package:idoc_user/logic/blocs/appointment/appointment_state.dart';
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   final AppointmentService _appointmentService;
 
-  // Store booking data throughout the flow
-  String? _patientName;
-  String? _contactNumber;
-  String? _description;
+  String? _patientName, _contactNumber, _description;
   DateTime? _selectedDate;
-  String? _selectedSlotId;
-  String? _selectedStartTime;
-  String? _selectedEndTime;
+  String? _selectedSlotId, _selectedStartTime, _selectedEndTime;
   List<Map<String, dynamic>> _availableSlots = [];
 
-  AppointmentBloc({
-    required AppointmentService appointmentService,
-  })  : _appointmentService = appointmentService,
+  AppointmentBloc({required AppointmentService appointmentService})
+      : _appointmentService = appointmentService,
         super(const AppointmentInitial()) {
+    on<FetchPatientNameEvent>(_onFetchPatientName);
     on<SetPatientDetailsEvent>(_onSetPatientDetails);
     on<FetchAvailableSlotsEvent>(_onFetchAvailableSlots);
     on<FetchAvailableSlotsRangeEvent>(_onFetchAvailableSlotsRange);
@@ -33,40 +325,81 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<CancelAppointmentEvent>(_onCancelAppointment);
   }
 
-  /// Helper method to check if a slot is in the past
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
   bool _isSlotInPast(DateTime slotDate, String startTime) {
     try {
-      final now = DateTime.now();
-      
-      // Parse the start time
-      final timeParts = startTime.replaceAll(RegExp(r'[AP]M'), '').trim().split(':');
-      int hour = int.parse(timeParts[0]);
-      final minute = int.parse(timeParts[1]);
-      
-      // Handle AM/PM format
-      if (startTime.contains('PM') && hour != 12) {
-        hour += 12;
-      } else if (startTime.contains('AM') && hour == 12) {
-        hour = 0;
-      }
-      
-      // Create the full slot datetime
-      final slotDateTime = DateTime(
-        slotDate.year,
-        slotDate.month,
-        slotDate.day,
-        hour,
-        minute,
-      );
-      
-      // Add 5-minute buffer
-      final bufferTime = now.add(const Duration(minutes: 5));
-      
-      return slotDateTime.isBefore(bufferTime);
-    } catch (e) {
-      print('Error parsing time in BLoC: $e');
-      return true; // If parsing fails, consider it past to be safe
+      final parts =
+          startTime.replaceAll(RegExp(r'[AP]M'), '').trim().split(':');
+      int hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      if (startTime.contains('PM') && hour != 12) hour += 12;
+      else if (startTime.contains('AM') && hour == 12) hour = 0;
+      final slotDT =
+          DateTime(slotDate.year, slotDate.month, slotDate.day, hour, minute);
+      return slotDT.isBefore(DateTime.now().add(const Duration(minutes: 5)));
+    } catch (_) {
+      return true;
     }
+  }
+
+  bool _isTodaySlotInPast(DateTime date, String startTime) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final day = DateTime(date.year, date.month, date.day);
+    return day.isAtSameMomentAs(today) && _isSlotInPast(date, startTime);
+  }
+
+  SlotsFetched _buildSlotsFetched({
+    DateTime? date,
+    String? slotId,
+    String? start,
+    String? end,
+  }) =>
+      SlotsFetched(
+        slots: _availableSlots,
+        selectedDate: date ?? _selectedDate!,
+        patientName: _patientName,
+        contactNumber: _contactNumber,
+        description: _description,
+        selectedSlotId: slotId,
+        selectedStartTime: start,
+        selectedEndTime: end,
+      );
+
+  String? _validateBooking() {
+    if (_patientName == null || _patientName!.trim().isEmpty)
+      return 'Patient name is required. Please go back and enter patient details.';
+    if (_contactNumber == null || _contactNumber!.trim().isEmpty)
+      return 'Contact number is required. Please go back and enter patient details.';
+    if (_description == null || _description!.trim().isEmpty)
+      return 'Description is required. Please go back and enter appointment details.';
+    if (_selectedDate == null) return 'Please select an appointment date.';
+    if (_selectedSlotId == null || _selectedSlotId!.trim().isEmpty)
+      return 'Please select a time slot.';
+    if (_selectedStartTime == null || _selectedStartTime!.trim().isEmpty)
+      return 'Please select a time slot.';
+    if (_selectedEndTime == null || _selectedEndTime!.trim().isEmpty)
+      return 'Please select a time slot.';
+    if (_isTodaySlotInPast(_selectedDate!, _selectedStartTime!))
+      return 'Cannot book a time slot that has already passed. Please select a future time slot.';
+    return null;
+  }
+
+  // ── Event handlers ────────────────────────────────────────────────────────
+
+  /// Fetches the logged-in user's name from Firestore and caches it in
+  /// [_patientName] so the booking form is pre-populated automatically.
+  Future<void> _onFetchPatientName(
+    FetchPatientNameEvent event,
+    Emitter<AppointmentState> emit,
+  ) async {
+    emit(const PatientNameLoading());
+    final name = await _appointmentService.getUserName(event.userId);
+    if (name != null && name.trim().isNotEmpty) {
+      _patientName = name.trim();
+    }
+    emit(PatientNameFetched(patientName: name?.trim()));
   }
 
   Future<void> _onSetPatientDetails(
@@ -76,13 +409,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     _patientName = event.patientName;
     _contactNumber = event.contactNumber;
     _description = event.description;
-
-    print('=== PATIENT DETAILS SET IN BLOC ===');
-    print('Patient Name: $_patientName');
-    print('Contact Number: $_contactNumber');
-    print('Description: $_description');
-    print('===================================');
-
     emit(PatientDetailsSet(
       patientName: event.patientName,
       contactNumber: event.contactNumber,
@@ -90,127 +416,67 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     ));
   }
 
+  /// Fetches all slots (available + booked) for a specific date so the
+  /// slot-selection screen can render booked slots as disabled chips.
   Future<void> _onFetchAvailableSlots(
     FetchAvailableSlotsEvent event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
       emit(const AppointmentLoading());
-
       _selectedDate = event.date;
-
-      final slots = await _appointmentService.fetchAvailableSlots(
+      // ✅ Switched to inclusive fetch — returns available + booked slots.
+      _availableSlots = await _appointmentService.fetchSlotsForDate(
         doctorId: event.doctorId,
         date: event.date,
       );
-
-      _availableSlots = slots;
-
-      print('=== SLOTS FETCHED (Single Date) ===');
-      print('Total slots: ${slots.length}');
-      print('Patient Name (preserved): $_patientName');
-      print('Contact Number (preserved): $_contactNumber');
-      print('Description (preserved): $_description');
-      print('===================================');
-
-      emit(SlotsFetched(
-        slots: slots,
-        selectedDate: event.date,
-        patientName: _patientName,
-        contactNumber: _contactNumber,
-        description: _description,
-      ));
+      emit(_buildSlotsFetched(date: event.date));
     } catch (e) {
-      emit(AppointmentError('Failed to fetch slots: ${e.toString()}'));
+      emit(AppointmentError('Failed to fetch slots: $e'));
     }
   }
 
+  /// Fetches all slots (available + booked) within a date range.
   Future<void> _onFetchAvailableSlotsRange(
     FetchAvailableSlotsRangeEvent event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      print('=== BEFORE LOADING - PATIENT DETAILS ===');
-      print('Patient Name: $_patientName');
-      print('Contact Number: $_contactNumber');
-      print('Description: $_description');
-      print('=======================================');
-      
       emit(const AppointmentLoading());
-
-      final slots = await _appointmentService.fetchAvailableSlotsForRange(
+      // ✅ Switched to inclusive fetch.
+      _availableSlots = await _appointmentService.fetchSlotsForRange(
         doctorId: event.doctorId,
         startDate: event.startDate,
         endDate: event.endDate,
       );
-
-      _availableSlots = slots;
-      
-      if (slots.isNotEmpty) {
-        _selectedDate = slots.first['date'] as DateTime;
-      } else {
-        _selectedDate = event.startDate;
-      }
-
-      print('=== SLOTS FETCHED (Range) ===');
-      print('Total slots: ${slots.length}');
-      print('Patient Name (PRESERVED): $_patientName');
-      print('Contact Number (PRESERVED): $_contactNumber');
-      print('Description (PRESERVED): $_description');
-      print('=============================');
-
-      emit(SlotsFetched(
-        slots: slots,
-        selectedDate: _selectedDate!,
-        patientName: _patientName,
-        contactNumber: _contactNumber,
-        description: _description,
-      ));
+      _selectedDate = _availableSlots.isNotEmpty
+          ? _availableSlots.first['date'] as DateTime
+          : event.startDate;
+      emit(_buildSlotsFetched());
     } catch (e) {
-      print('Error fetching slots range: $e');
-      emit(AppointmentError('Failed to fetch slots: ${e.toString()}'));
+      emit(AppointmentError('Failed to fetch slots: $e'));
     }
   }
 
+  /// Fetches all future slots (available + booked) from today onwards.
+  /// This is what [SlotSelectionScreen] calls via [FetchAllAvailableSlotsEvent].
   Future<void> _onFetchAllAvailableSlots(
     FetchAllAvailableSlotsEvent event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      print('=== FETCHING ALL AVAILABLE SLOTS ===');
-      
       emit(const AppointmentLoading());
-
-      final slots = await _appointmentService.fetchAllAvailableSlots(
-        doctorId: event.doctorId,
-      );
-
-      _availableSlots = slots;
-      
-      if (slots.isNotEmpty) {
-        _selectedDate = slots.first['date'] as DateTime;
-      } else {
-        final now = DateTime.now();
-        _selectedDate = DateTime(now.year, now.month, now.day);
-      }
-
-      print('=== ALL SLOTS FETCHED ===');
-      print('Total slots: ${slots.length}');
-      print('Patient Name (PRESERVED): $_patientName');
-      print('Contact Number (PRESERVED): $_contactNumber');
-      print('Description (PRESERVED): $_description');
-      print('========================');
-
-      emit(SlotsFetched(
-        slots: slots,
-        selectedDate: _selectedDate!,
-        patientName: _patientName,
-        contactNumber: _contactNumber,
-        description: _description,
-      ));
+      // ✅ Switched to inclusive fetch — the slot-selection screen receives
+      //    both available and booked slots; booked ones are disabled in the UI.
+      _availableSlots =
+          await _appointmentService.fetchSlots(doctorId: event.doctorId);
+      final now = DateTime.now();
+      _selectedDate = _availableSlots.isNotEmpty
+          ? _availableSlots.first['date'] as DateTime
+          : DateTime(now.year, now.month, now.day);
+      emit(_buildSlotsFetched());
     } catch (e) {
-      print('Error fetching all available slots: $e');
-      emit(AppointmentError('Failed to fetch slots: ${e.toString()}'));
+      emit(AppointmentError('Failed to fetch slots: $e'));
     }
   }
 
@@ -219,67 +485,25 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     _selectedDate = event.date;
-    
-    // Clear selected slot when changing date
-    _selectedSlotId = null;
-    _selectedStartTime = null;
-    _selectedEndTime = null;
-
-    print('=== DATE SELECTED ===');
-    print('Selected Date: $_selectedDate');
-    print('Patient Name (preserved): $_patientName');
-    print('Contact Number (preserved): $_contactNumber');
-    print('Description (preserved): $_description');
-    print('Slot selection cleared');
-    print('====================');
-
-    emit(SlotsFetched(
-      slots: _availableSlots,
-      selectedDate: event.date,
-      patientName: _patientName,
-      contactNumber: _contactNumber,
-      description: _description,
-      selectedSlotId: null,
-      selectedStartTime: null,
-      selectedEndTime: null,
-    ));
+    _selectedSlotId = _selectedStartTime = _selectedEndTime = null;
+    emit(_buildSlotsFetched(date: event.date));
   }
 
   Future<void> _onSelectSlot(
     SelectSlotEvent event,
     Emitter<AppointmentState> emit,
   ) async {
-    // Validate that the slot is not in the past before allowing selection
-    if (_selectedDate != null) {
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final selectedDay = DateTime(_selectedDate!.year, _selectedDate!.month, _selectedDate!.day);
-      
-      if (selectedDay.isAtSameMomentAs(today)) {
-        if (_isSlotInPast(_selectedDate!, event.startTime)) {
-          print('⚠️ WARNING: User tried to select a past slot');
-          emit(const AppointmentError('This time slot has already passed. Please select a future time.'));
-          return;
-        }
-      }
+    if (_selectedDate != null &&
+        _isTodaySlotInPast(_selectedDate!, event.startTime)) {
+      emit(const AppointmentError(
+          'This time slot has already passed. Please select a future time.'));
+      return;
     }
-
     _selectedSlotId = event.slotId;
     _selectedStartTime = event.startTime;
     _selectedEndTime = event.endTime;
-
-    print('=== SLOT SELECTED ===');
-    print('Slot ID: $_selectedSlotId');
-    print('Start Time: $_selectedStartTime');
-    print('End Time: $_selectedEndTime');
-    print('Patient Name (preserved): $_patientName');
-    print('Contact Number (preserved): $_contactNumber');
-    print('Description (preserved): $_description');
-    print('====================');
-
     if (state is SlotsFetched) {
-      final currentState = state as SlotsFetched;
-      emit(currentState.copyWith(
+      emit((state as SlotsFetched).copyWith(
         selectedSlotId: event.slotId,
         selectedStartTime: event.startTime,
         selectedEndTime: event.endTime,
@@ -294,101 +518,31 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     BookAppointmentEvent event,
     Emitter<AppointmentState> emit,
   ) async {
+    final error = _validateBooking();
+    if (error != null) {
+      emit(AppointmentError(error));
+      return;
+    }
+
     try {
-      print('=== BOOKING APPOINTMENT ===');
-      print('Patient Name: $_patientName');
-      print('Contact Number: $_contactNumber');
-      print('Description: $_description');
-      print('Selected Date: $_selectedDate');
-      print('Selected Slot ID: $_selectedSlotId');
-      print('Selected Start Time: $_selectedStartTime');
-      print('Selected End Time: $_selectedEndTime');
-      print('Doctor ID: ${event.doctorId}');
-      print('User ID: ${event.userId}');
-      print('==========================');
-
-      // Validate all required fields
-      if (_patientName == null || _patientName!.trim().isEmpty) {
-        print('❌ ERROR: Patient Name is missing');
-        emit(const AppointmentError('Patient name is required. Please go back and enter patient details.'));
-        return;
-      }
-      
-      if (_contactNumber == null || _contactNumber!.trim().isEmpty) {
-        print('❌ ERROR: Contact Number is missing');
-        emit(const AppointmentError('Contact number is required. Please go back and enter patient details.'));
-        return;
-      }
-      
-      if (_description == null || _description!.trim().isEmpty) {
-        print('❌ ERROR: Description is missing');
-        emit(const AppointmentError('Description is required. Please go back and enter appointment details.'));
-        return;
-      }
-      
-      if (_selectedDate == null) {
-        print('❌ ERROR: Appointment Date is missing');
-        emit(const AppointmentError('Please select an appointment date.'));
-        return;
-      }
-      
-      if (_selectedSlotId == null || _selectedSlotId!.trim().isEmpty) {
-        print('❌ ERROR: Slot ID is missing');
-        emit(const AppointmentError('Please select a time slot.'));
-        return;
-      }
-      
-      if (_selectedStartTime == null || _selectedStartTime!.trim().isEmpty) {
-        print('❌ ERROR: Start Time is missing');
-        emit(const AppointmentError('Please select a time slot.'));
-        return;
-      }
-      
-      if (_selectedEndTime == null || _selectedEndTime!.trim().isEmpty) {
-        print('❌ ERROR: End Time is missing');
-        emit(const AppointmentError('Please select a time slot.'));
-        return;
-      }
-
-      // Final validation: Check if the slot is in the past
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final appointmentDay = DateTime(_selectedDate!.year, _selectedDate!.month, _selectedDate!.day);
-      
-      if (appointmentDay.isAtSameMomentAs(today)) {
-        if (_isSlotInPast(_selectedDate!, _selectedStartTime!)) {
-          print('❌ ERROR: Attempted to book a past slot');
-          emit(const AppointmentError('Cannot book a time slot that has already passed. Please select a future time slot.'));
-          return;
-        }
-      }
-
       emit(const AppointmentLoading());
-
-      final appointment = AppointmentModel(
-        doctorId: event.doctorId,
-        userId: event.userId,
-        slotId: _selectedSlotId!,
-        patientName: _patientName!,
-        contactNumber: _contactNumber!,
-        description: _description!,
-        appointmentDate: _selectedDate!,
-        startTime: _selectedStartTime!,
-        endTime: _selectedEndTime!,
-        status: 'confirmed',
-        doctorName: event.doctorName,
-        doctorSpecialist: event.doctorSpecialist,
-        doctorProfileImageUrl: event.doctorProfileImageUrl,
-      );
-
-      print('Attempting to book appointment...');
-
       final appointmentId = await _appointmentService.bookAppointment(
-        appointment: appointment,
+        appointment: AppointmentModel(
+          doctorId: event.doctorId,
+          userId: event.userId,
+          slotId: _selectedSlotId!,
+          patientName: _patientName!,
+          contactNumber: _contactNumber!,
+          description: _description!,
+          appointmentDate: _selectedDate!,
+          startTime: _selectedStartTime!,
+          endTime: _selectedEndTime!,
+          status: 'confirmed',
+          doctorName: event.doctorName,
+          doctorSpecialist: event.doctorSpecialist,
+          doctorProfileImageUrl: event.doctorProfileImageUrl,
+        ),
       );
-
-      print('✅ Appointment booked successfully with ID: $appointmentId');
-
       emit(AppointmentBooked(
         appointmentId: appointmentId,
         doctorName: event.doctorName ?? 'Doctor',
@@ -396,10 +550,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         endTime: _selectedEndTime!,
         appointmentDate: _selectedDate!,
       ));
-    } catch (e, stackTrace) {
-      print('❌ ERROR booking appointment: $e');
-      print('Stack trace: $stackTrace');
-      emit(AppointmentError('Failed to book appointment: ${e.toString()}'));
+    } catch (e) {
+      emit(AppointmentError('Failed to book appointment: $e'));
     }
   }
 
@@ -407,15 +559,10 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     ResetBookingEvent event,
     Emitter<AppointmentState> emit,
   ) async {
-    _patientName = null;
-    _contactNumber = null;
-    _description = null;
+    _patientName = _contactNumber = _description = null;
     _selectedDate = null;
-    _selectedSlotId = null;
-    _selectedStartTime = null;
-    _selectedEndTime = null;
+    _selectedSlotId = _selectedStartTime = _selectedEndTime = null;
     _availableSlots = [];
-
     emit(const AppointmentInitial());
   }
 
@@ -425,12 +572,11 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(const AppointmentLoading());
-
-      final appointments = await _appointmentService.getUserAppointments(event.userId);
-
-      emit(AppointmentsLoaded(appointments: appointments));
+      emit(AppointmentsLoaded(
+          appointments:
+              await _appointmentService.getUserAppointments(event.userId)));
     } catch (e) {
-      emit(AppointmentError('Failed to load appointments: ${e.toString()}'));
+      emit(AppointmentError('Failed to load appointments: $e'));
     }
   }
 
@@ -440,16 +586,14 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(const AppointmentLoading());
-
       await _appointmentService.cancelAppointment(
         appointmentId: event.appointmentId,
         doctorId: event.doctorId,
         slotId: event.slotId,
       );
-
       emit(const AppointmentInitial());
     } catch (e) {
-      emit(AppointmentError('Failed to cancel appointment: ${e.toString()}'));
+      emit(AppointmentError('Failed to cancel appointment: $e'));
     }
   }
 }

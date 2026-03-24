@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:idoc_user/data/models/appointment_model.dart';
 
 abstract class AppointmentState extends Equatable {
   const AppointmentState();
@@ -13,6 +14,26 @@ class AppointmentInitial extends AppointmentState {
 
 class AppointmentLoading extends AppointmentState {
   const AppointmentLoading();
+}
+
+/// Emitted while [FetchPatientNameEvent] is in-flight, so the UI can show
+/// a skeleton / shimmer only on the name field, not the whole screen.
+class PatientNameLoading extends AppointmentState {
+  const PatientNameLoading();
+}
+
+/// Emitted once the patient name has been successfully fetched from Firestore.
+///
+/// [patientName] is null when the user document exists but has no name field,
+/// or when the fetch returned an error — the UI should fall back to the
+/// editable text field in that case (see [PatientDetailsScreen]).
+class PatientNameFetched extends AppointmentState {
+  final String? patientName;
+
+  const PatientNameFetched({this.patientName});
+
+  @override
+  List<Object?> get props => [patientName];
 }
 
 class PatientDetailsSet extends AppointmentState {
@@ -121,7 +142,7 @@ class AppointmentError extends AppointmentState {
 }
 
 class AppointmentsLoaded extends AppointmentState {
-  final List<dynamic> appointments; // Will be AppointmentModel
+  final List<AppointmentModel> appointments;
 
   const AppointmentsLoaded({required this.appointments});
 

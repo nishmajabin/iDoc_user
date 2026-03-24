@@ -7,7 +7,7 @@ import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/do
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_header.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_info_section.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_license_section.dart';
-import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_rating_section.dart';
+import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/rating_review/widgets/doctor_rating_section.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/rating_display.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_consultation_fee_section.dart';
 

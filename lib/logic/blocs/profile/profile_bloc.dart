@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/data/repostories/profile_repository.dart';
 import 'package:idoc_user/logic/blocs/profile/profile_event.dart';
@@ -14,6 +13,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<FetchUserProfile>(_onFetchUserProfile);
     on<UpdateUserProfile>(_onUpdateUserProfile);
     on<UpdateProfileImage>(_onUpdateProfileImage);
+    on<LogoutRequested>(_onLogoutRequested);
   }
 
   Future<void> _onFetchUserProfile(
@@ -21,7 +21,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     emit(const ProfileLoading());
-    
     try {
       final profile = await _repository.fetchUserProfile();
       emit(profile);
@@ -38,8 +37,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(const ProfileLoading());
 
     try {
-      final currentImageUrl = currentState is ProfileSuccess 
-          ? currentState.profileImageUrl 
+      final currentImageUrl = currentState is ProfileSuccess
+          ? currentState.profileImageUrl
           : null;
 
       final profile = await _repository.updateUserProfile(
@@ -48,8 +47,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         address: event.address,
         currentImageUrl: currentImageUrl,
       );
-      
-      emit(profile);
+
+      emit(ProfileUpdateSuccess(profile));
     } catch (e) {
       emit(ProfileFailure(error: 'Failed to update profile: ${e.toString()}'));
     }
@@ -60,30 +59,41 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     final currentState = state;
-    
+
     try {
-      // Get current profile data
-      ProfileSuccess? currentProfile = await _repository.getCurrentProfile(currentState);
-      
+      ProfileSuccess? currentProfile =
+          await _repository.getCurrentProfile(currentState);
+
       if (currentProfile == null) {
         emit(const ProfileFailure(error: 'Unable to get current profile'));
         return;
       }
 
-      // Upload image and update profile
       final updatedProfile = await _repository.updateProfileImage(
         imageFile: event.imageFile,
         currentProfile: currentProfile,
-        onProgress: (progress) => emit(ProfileImageUploading(progress, currentProfile)),
+        onProgress: (progress) =>
+            emit(ProfileImageUploading(progress, currentProfile)),
       );
 
       emit(updatedProfile);
     } catch (e) {
-      // Restore previous state if available
       if (currentState is ProfileSuccess) {
         emit(currentState);
       }
       emit(ProfileFailure(error: 'Failed to upload image: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onLogoutRequested(
+    LogoutRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    try {
+      await _repository.logout();
+      emit(const LogoutSuccess());
+    } catch (e) {
+      emit(ProfileFailure(error: 'Logout failed: ${e.toString()}'));
     }
   }
 }

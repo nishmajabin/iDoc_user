@@ -15,16 +15,6 @@ class ProfileLoading extends ProfileState {
   const ProfileLoading();
 }
 
-// UPDATED: Now carries the profile data while uploading
-class ProfileImageUploading extends ProfileState {
-  final double progress; // 0.0 to 1.0
-  final ProfileSuccess currentProfile; // Keep current profile data
-
-  const ProfileImageUploading(this.progress, this.currentProfile);
-
-  @override
-  List<Object?> get props => [progress, currentProfile];
-}
 class ProfileSuccess extends ProfileState {
   final String name;
   final String email;
@@ -39,9 +29,6 @@ class ProfileSuccess extends ProfileState {
     required this.address,
     this.profileImageUrl,
   });
-
-  @override
-  List<Object?> get props => [name, email, mobileNumber, address, profileImageUrl];
 
   ProfileSuccess copyWith({
     String? name,
@@ -58,6 +45,28 @@ class ProfileSuccess extends ProfileState {
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
     );
   }
+
+  @override
+  List<Object?> get props => [name, email, mobileNumber, address, profileImageUrl];
+}
+
+class ProfileImageUploading extends ProfileState {
+  final double progress;
+  final ProfileSuccess currentProfile;
+
+  const ProfileImageUploading(this.progress, this.currentProfile);
+
+  @override
+  List<Object?> get props => [progress, currentProfile];
+}
+
+class ProfileUpdateSuccess extends ProfileState {
+  final ProfileSuccess profile;
+
+  const ProfileUpdateSuccess(this.profile);
+
+  @override
+  List<Object?> get props => [profile];
 }
 
 class ProfileFailure extends ProfileState {

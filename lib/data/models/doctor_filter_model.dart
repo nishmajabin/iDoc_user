@@ -1,4 +1,3 @@
-// lib/data/models/doctor_filter_model.dart
 import 'package:equatable/equatable.dart';
 
 class DoctorFilter extends Equatable {

@@ -7,6 +7,17 @@ abstract class AppointmentEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Fetches the patient name from Firestore and pre-fills the booking form.
+/// Should be dispatched as soon as [PatientDetailsScreen] is mounted.
+class FetchPatientNameEvent extends AppointmentEvent {
+  final String userId;
+
+  const FetchPatientNameEvent(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 class SetPatientDetailsEvent extends AppointmentEvent {
   final String patientName;
   final String contactNumber;
@@ -53,9 +64,7 @@ class FetchAvailableSlotsRangeEvent extends AppointmentEvent {
 class FetchAllAvailableSlotsEvent extends AppointmentEvent {
   final String doctorId;
 
-  const FetchAllAvailableSlotsEvent({
-    required this.doctorId,
-  });
+  const FetchAllAvailableSlotsEvent({required this.doctorId});
 
   @override
   List<Object?> get props => [doctorId];

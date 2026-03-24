@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/presentation/screens/ai_chat_bot/ai_chat_event.dart';
@@ -11,7 +12,14 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
   final SendMedicalImageMessageUseCase _sendImageMessage;
   static const _uuid = Uuid();
 
-  // ── Welcome message helper ────────────────────────────────────────────────
+  // ── Request guard ─────────────────────────────────────────────────────────
+  bool _isProcessing = false;
+
+  // ── Debounce timer (800 ms) ───────────────────────────────────────────────
+  Timer? _debounceTimer;
+  static const _debounceDuration = Duration(milliseconds: 800);
+
+  // ── Welcome message ───────────────────────────────────────────────────────
 
   static MedicalChatMessage _buildWelcome() => MedicalChatMessage(
         id: 'welcome',
@@ -35,13 +43,20 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
     on<ClearMedicalChatEvent>(_onClearChat);
   }
 
-  // ── Text message ─────────────────────────────────────────────────────────
+  // ── Text message (with 800ms debounce) ─────────────────────────────────
 
   Future<void> _onSendText(
     SendMedicalTextEvent event,
     Emitter<MedicalChatState> emit,
   ) async {
     if (event.message.trim().isEmpty) return;
+
+    // Synchronous guard — prevents concurrent requests
+    if (_isProcessing) return;
+    _isProcessing = true;
+
+    // Cancel any pending debounce timer
+    _debounceTimer?.cancel();
 
     final userMsg = MedicalChatMessage(
       id: _uuid.v4(),
@@ -52,6 +67,9 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
 
     final updatedMessages = [...state.messages, userMsg];
     emit(MedicalChatLoading(messages: updatedMessages, pendingImage: null));
+
+    // ── Debounce delay: wait 800ms before actually sending ──────────────
+    await Future.delayed(_debounceDuration);
 
     try {
       final response = await _sendMessage.call(
@@ -76,15 +94,22 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
         messages: [...updatedMessages, errorMsg],
         errorMessage: e.toString(),
       ));
+    } finally {
+      _isProcessing = false;
     }
   }
 
-  // ── Image message ─────────────────────────────────────────────────────────
+  // ── Image message (with 800ms debounce) ────────────────────────────────
 
   Future<void> _onSendImage(
     SendMedicalImageEvent event,
     Emitter<MedicalChatState> emit,
   ) async {
+    if (_isProcessing) return;
+    _isProcessing = true;
+
+    _debounceTimer?.cancel();
+
     final userMsg = MedicalChatMessage(
       id: _uuid.v4(),
       text: event.caption,
@@ -95,6 +120,9 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
 
     final updatedMessages = [...state.messages, userMsg];
     emit(MedicalChatLoading(messages: updatedMessages, pendingImage: null));
+
+    // ── Debounce delay ──────────────────────────────────────────────────
+    await Future.delayed(_debounceDuration);
 
     try {
       final response = await _sendImageMessage.call(
@@ -120,6 +148,8 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
         messages: [...updatedMessages, errorMsg],
         errorMessage: e.toString(),
       ));
+    } finally {
+      _isProcessing = false;
     }
   }
 
@@ -137,6 +167,8 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
 
   void _onClearChat(
       ClearMedicalChatEvent event, Emitter<MedicalChatState> emit) {
+    _isProcessing = false;
+    _debounceTimer?.cancel();
     emit(MedicalChatInitial(messages: [_buildWelcome()]));
   }
 
@@ -171,18 +203,32 @@ class MedicalChatBloc extends Bloc<MedicalChatEvent, MedicalChatState> {
         lower.contains('host')) {
       return 'No internet connection. Please check your network and try again.';
     }
+    if (lower.contains('invalid') && lower.contains('api key')) {
+      return 'Invalid API key. Please check your API key configuration.';
+    }
     if (lower.contains('api key') ||
         lower.contains('401') ||
         lower.contains('403') ||
         lower.contains('unauthorized')) {
-      return 'Invalid API key. Please check your configuration.';
+      return 'API key error. Please verify your API key.';
     }
-    if (lower.contains('429') || lower.contains('quota')) {
-      return 'API quota exceeded. Please wait a moment and try again.';
+    if (lower.contains('both ai providers failed')) {
+      return 'Both AI services are currently unavailable. Please try again later.';
+    }
+    if (lower.contains('429') ||
+        lower.contains('quota') ||
+        lower.contains('rate limit')) {
+      return 'API rate limit reached. Please wait a moment and try again.';
     }
     if (lower.contains('timeout')) {
       return 'Request timed out. Please try again.';
     }
     return raw.isNotEmpty ? raw : 'Something went wrong. Please try again.';
+  }
+
+  @override
+  Future<void> close() {
+    _debounceTimer?.cancel();
+    return super.close();
   }
 }

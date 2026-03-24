@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/utils/time_formatter.dart'; // ← add this import
 import 'package:idoc_user/data/models/appointment_model.dart';
 import 'package:idoc_user/logic/blocs/appointment_list/appointment_list_bloc.dart';
 import 'package:idoc_user/logic/blocs/appointment_list/appointment_list_event.dart';
@@ -52,8 +53,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
     }
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
@@ -76,8 +75,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
       ),
     );
   }
-
-  // ── Header ─────────────────────────────────────────────────────────────────
 
   Widget _buildHeader() {
     return Container(
@@ -166,8 +163,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
     );
   }
 
-  // ── Tab Bar ────────────────────────────────────────────────────────────────
-
   Widget _buildTabBar() {
     return Container(
       color: AppColors.gradientStart,
@@ -198,8 +193,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
       ),
     );
   }
-
-  // ── Content ────────────────────────────────────────────────────────────────
 
   Widget _buildContent() {
     return BlocConsumer<AppointmentsListBloc, AppointmentsListState>(
@@ -264,8 +257,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
     );
   }
 
-  // ── Empty State ────────────────────────────────────────────────────────────
-
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -325,8 +316,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
       ),
     );
   }
-
-  // ── Error State ────────────────────────────────────────────────────────────
 
   Widget _buildError(String message) {
     return Center(
@@ -401,8 +390,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
     );
   }
 
-  // ── Shimmer ────────────────────────────────────────────────────────────────
-
   Widget _buildShimmer() {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
@@ -410,8 +397,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
       itemBuilder: (_, __) => _ShimmerCard(),
     );
   }
-
-  // ── Unauthenticated ────────────────────────────────────────────────────────
 
   Widget _buildUnauthenticated() {
     return Scaffold(
@@ -500,8 +485,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
       ),
     );
   }
-
-  // ── Cancel Dialog ──────────────────────────────────────────────────────────
 
   void _showCancelDialog(BuildContext context, AppointmentModel appointment) {
     showDialog(
@@ -637,8 +620,8 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen>
         backgroundColor:
             isError ? AppColors.cancelled : AppColors.completed,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 3),
       ),
@@ -783,7 +766,7 @@ class _AppointmentCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // ── Status accent bar ─────────────────────────────────────────
+            // Status accent bar
             Container(
               height: 4,
               decoration: BoxDecoration(
@@ -798,7 +781,7 @@ class _AppointmentCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Doctor row ────────────────────────────────────────
+                  // Doctor row
                   Row(
                     children: [
                       Container(
@@ -814,10 +797,9 @@ class _AppointmentCard extends StatelessWidget {
                             end: Alignment.bottomRight,
                           ),
                           shape: BoxShape.circle,
-                          image: (appointment.doctorProfileImageUrl !=
-                                      null &&
-                                  appointment.doctorProfileImageUrl!
-                                      .isNotEmpty)
+                          image: (appointment.doctorProfileImageUrl != null &&
+                                  appointment
+                                      .doctorProfileImageUrl!.isNotEmpty)
                               ? DecorationImage(
                                   image: NetworkImage(
                                       appointment.doctorProfileImageUrl!),
@@ -860,8 +842,7 @@ class _AppointmentCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              appointment.doctorSpecialist ??
-                                  'Consultation',
+                              appointment.doctorSpecialist ?? 'Consultation',
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: AppColors.textSecondary,
@@ -902,7 +883,7 @@ class _AppointmentCard extends StatelessWidget {
                   const Divider(height: 1, color: AppColors.divider),
                   const SizedBox(height: 14),
 
-                  // ── Date / Time ───────────────────────────────────────
+                  // Date / Time chips
                   Row(
                     children: [
                       _MetaChip(
@@ -915,14 +896,15 @@ class _AppointmentCard extends StatelessWidget {
                       const SizedBox(width: 10),
                       _MetaChip(
                         icon: Icons.access_time_rounded,
-                        value: appointment.startTime,
+                        // ✅ Only change: raw 24-hour → AM/PM display
+                        value: formatTimeTo12Hour(appointment.startTime),
                         color: AppColors.accent,
                         surface: AppColors.confirmedSurface,
                       ),
                     ],
                   ),
 
-                  // ── Cancel button ─────────────────────────────────────
+                  // Cancel button
                   if (isUpcoming && !isCancelled) ...[
                     const SizedBox(height: 14),
                     GestureDetector(
@@ -934,8 +916,8 @@ class _AppointmentCard extends StatelessWidget {
                           color: AppColors.cancelledSurface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppColors.cancelled
-                                .withValues(alpha: 0.3),
+                            color:
+                                AppColors.cancelled.withValues(alpha: 0.3),
                           ),
                         ),
                         child: const Row(
@@ -958,7 +940,7 @@ class _AppointmentCard extends StatelessWidget {
                     ),
                   ],
 
-                  // ── Tap hint ──────────────────────────────────────────
+                  // Tap hint
                   const SizedBox(height: 10),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
