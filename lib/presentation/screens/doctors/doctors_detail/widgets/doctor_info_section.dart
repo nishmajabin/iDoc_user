@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/doctor_model.dart';
 
 class DoctorInfoSection extends StatelessWidget {

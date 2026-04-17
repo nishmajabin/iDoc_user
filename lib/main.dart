@@ -40,7 +40,7 @@ import 'package:idoc_user/logic/blocs/profile/profile_bloc.dart';
 import 'package:idoc_user/logic/blocs/settings/settings_bloc.dart';
 import 'package:idoc_user/logic/blocs/splash/splash_bloc.dart';
 import 'package:idoc_user/logic/blocs/splash/splash_event.dart';
-import 'package:idoc_user/presentation/screens/call/call_listener_wrapper.dart';
+import 'package:idoc_user/presentation/screens/call/widgets/call_listener/call_listener_wrapper.dart';
 import 'package:idoc_user/presentation/screens/splash/splash_screen.dart';
 
 main() async {
@@ -80,6 +80,7 @@ class StudentApp extends StatelessWidget {
         RepositoryProvider<FavoritesRepository>(
           create: (context) => FavoritesRepository(),
         ),
+       
       ],
       child: MultiBlocProvider(
         providers: [
@@ -110,9 +111,9 @@ class StudentApp extends StatelessWidget {
             create: (context) => DoctorDetailBloc(DoctorRepository()),
           ),
           BlocProvider<FeaturedDoctorsBloc>(
-            create: (context) => FeaturedDoctorsBloc(
-              context.read<DoctorRepository>(),
-            ),
+            create:
+                (context) =>
+                    FeaturedDoctorsBloc(context.read<DoctorRepository>()),
           ),
           BlocProvider<FavoritesBloc>(
             create:

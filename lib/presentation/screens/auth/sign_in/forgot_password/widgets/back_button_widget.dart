@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class BackButtonWidget extends StatelessWidget {
   const BackButtonWidget({super.key});
@@ -11,11 +12,11 @@ class BackButtonWidget extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: AppColors.shadowDark.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -23,7 +24,7 @@ class BackButtonWidget extends StatelessWidget {
         ),
         child: const Icon(
           Icons.chevron_left,
-          color: Color(0xFF2C3E50),
+          color: AppColors.backBtnIconColor,
           size: 24,
         ),
       ),

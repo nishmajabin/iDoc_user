@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:idoc_user/data/models/user_model.dart';
-import 'package:idoc_user/presentation/screens/ai_chat_bot/medical_chat_factory.dart';
-import 'package:idoc_user/presentation/screens/chat/patient_chat_room_list_screen.dart';
+import 'package:idoc_user/presentation/screens/ai_chat_bot/widgets/medical_chat_factory.dart';
+import 'package:idoc_user/presentation/screens/chat/chat_room_list/screen/patient_chat_room_list_screen.dart';
 import 'package:idoc_user/presentation/screens/home/widgets/featured_doctors_carousel.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:idoc_user/presentation/screens/doctors/favorite_doctors_screen.dart';
+import 'package:idoc_user/presentation/screens/doctors/favorites/screens/favorite_doctors_screen.dart';
 
 class HomeHeader extends StatelessWidget {
   final UserModel user;

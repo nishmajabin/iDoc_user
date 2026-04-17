@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class PrescriptionShimmer extends StatefulWidget {
   const PrescriptionShimmer({super.key});

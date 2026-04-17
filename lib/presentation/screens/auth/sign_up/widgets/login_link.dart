@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class LoginLink extends StatelessWidget {
   final VoidCallback onTap;
@@ -15,7 +15,7 @@ class LoginLink extends StatelessWidget {
         text: TextSpan(
           text: "Already have an account? ",
           style: GoogleFonts.poppins(
-            color: const Color(0xFF555555),
+            color: AppColors.lightTextColor,
             fontWeight: FontWeight.w500,
           ),
           children: [

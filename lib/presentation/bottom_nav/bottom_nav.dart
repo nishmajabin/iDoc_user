@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -14,10 +15,10 @@ class CustomBottomNavBar extends StatelessWidget {
     return Container(
       height: 75,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppColors.shadowDark.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -3),
           ),
@@ -66,22 +67,22 @@ class CustomBottomNavBar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF4FC3F7) : Colors.transparent,
+          color: isSelected ?  AppColors.navItemSelected: AppColors.transparentColor,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.grey[600],
+              color: isSelected ? AppColors.bgColor: AppColors.lightTextColor,
               size: 26,
             ),
             if (isSelected && label.isNotEmpty) ...[
               const SizedBox(width: 8),
               Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.white,
+                style:  TextStyle(
+                  color: AppColors.bgColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),

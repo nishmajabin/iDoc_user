@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/prescription_model.dart';
+import 'package:idoc_user/presentation/screens/appointment/prescription/widgets/prescription_doctor_avatar.dart';
 import 'package:intl/intl.dart';
 
 class PrescriptionCard extends StatelessWidget {
@@ -46,7 +47,7 @@ class PrescriptionCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _DoctorAvatar(
+                  PrescriptionDoctorAvatar(
                     name: record.doctorName ?? 'D',
                     imageUrl: record.doctorProfileImageUrl,
                   ),
@@ -59,8 +60,8 @@ class PrescriptionCard extends StatelessWidget {
                           record.doctorName != null
                               ? 'Dr. ${record.doctorName}'
                               : 'Doctor',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: AppColors.bgColor,
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.2,
@@ -73,7 +74,7 @@ class PrescriptionCard extends StatelessWidget {
                           Text(
                             record.doctorSpecialist!,
                             style: const TextStyle(
-                              color: Colors.white70,
+                              color: AppColors.lightText,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -87,13 +88,13 @@ class PrescriptionCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.18),
+                      color: AppColors.backgroundColor.withValues(alpha: 0.18),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       DateFormat('dd MMM').format(record.timestamp),
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style:  TextStyle(
+                        color: AppColors.backgroundColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                       ),
@@ -245,44 +246,3 @@ class PrescriptionCard extends StatelessWidget {
   }
 }
 
-class _DoctorAvatar extends StatelessWidget {
-  final String name;
-  final String? imageUrl;
-
-  const _DoctorAvatar({required this.name, this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
-    final initial = name.isNotEmpty ? name[0].toUpperCase() : 'D';
-
-    return Container(
-      width: 46,
-      height: 46,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white.withValues(alpha: 0.2),
-        image: hasImage
-            ? DecorationImage(
-                image: NetworkImage(imageUrl!),
-                fit: BoxFit.cover,
-              )
-            : null,
-        border: Border.all(
-            color: Colors.white.withValues(alpha: 0.45), width: 2),
-      ),
-      child: hasImage
-          ? null
-          : Center(
-              child: Text(
-                initial,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-    );
-  }
-}

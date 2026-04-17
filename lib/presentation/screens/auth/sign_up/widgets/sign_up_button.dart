@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class SignUpButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -18,13 +19,13 @@ class SignUpButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.shadowDark,
           elevation: 5,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
-            side: const BorderSide(color: Color(0xFF6AD2FF), width: 5),
+            side: const BorderSide(color: AppColors.signInBorder, width: 5),
           ),
-          disabledBackgroundColor: Colors.grey,
+          disabledBackgroundColor: AppColors.disabledIconColor,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 22),
@@ -34,14 +35,14 @@ class SignUpButton extends StatelessWidget {
                     height: 20,
                     width: 20,
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.backgroundColor),
                       strokeWidth: 2,
                     ),
                   )
                   : Text(
                     'NEXT',
                     style: GoogleFonts.poppins(
-                      color: Colors.white,
+                      color: AppColors.backgroundColor,
                       fontSize: 17.5,
                       letterSpacing: 1.5,
                       fontWeight: FontWeight.w600,

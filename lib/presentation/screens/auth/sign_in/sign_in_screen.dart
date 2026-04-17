@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/core/handlers/sign_in_handler.dart';
 import 'package:idoc_user/core/utils/validators.dart';
 import 'package:idoc_user/logic/blocs/auth/email/sign_in/sign_in_bloc.dart';
@@ -64,7 +64,7 @@ class SignInScreen extends StatelessWidget {
                             controller: _pdController,
                             hintText: 'Password',
                             prefixIcon: Icons.lock_outline,
-                            backgroundColor: const Color(0xFFF5F5F5),
+                            backgroundColor: AppColors.bgColor,
                             isPassword: true,
                             obscureText: state.obscurePassword,
                             onSuffixTap: () {
@@ -94,7 +94,7 @@ class SignInScreen extends StatelessWidget {
                     child: const Text(
                       'Forgot Password?',
                       style: TextStyle(
-                        color: Color(0xFF0058CB),
+                        color: AppColors.forgotPdText,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -117,7 +117,7 @@ class SignInScreen extends StatelessWidget {
                     'OR',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xFF555555),
+                      color: AppColors.lightTextColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 Widget layerBlur(BuildContext context) {
   final Size screenSize = MediaQuery.of(context).size;

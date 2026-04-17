@@ -1,10 +1,6 @@
 import 'dart:typed_data';
-import 'package:idoc_user/presentation/screens/ai_chat_bot/chat_message.dart';
+import 'package:idoc_user/data/models/medical_chat_message.dart';
 
-/// Abstract contract for any AI chat API provider (Groq, OpenRouter, etc.).
-///
-/// Both [GroqChatService] and [OpenRouterChatService] implement this,
-/// allowing the repository to swap providers transparently.
 abstract class ChatApiService {
   /// Human-readable name used for logging, e.g. "Groq" or "OpenRouter".
   String get providerName;

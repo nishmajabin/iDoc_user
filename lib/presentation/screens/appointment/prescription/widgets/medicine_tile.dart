@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/prescription_model.dart';
+import 'package:idoc_user/presentation/screens/appointment/prescription/widgets/medicine_tile_chip.dart';
 
 class MedicineTile extends StatelessWidget {
   final PrescriptionMedication med;
@@ -43,8 +44,8 @@ class MedicineTile extends StatelessWidget {
             child: Center(
               child: Text(
                 '$index',
-                style: const TextStyle(
-                  color: Colors.white,
+                style:  TextStyle(
+                  color: AppColors.backgroundColor,
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                 ),
@@ -70,31 +71,31 @@ class MedicineTile extends StatelessWidget {
                   spacing: 6,
                   runSpacing: 6,
                   children: [
-                    _Chip(
+                    MedicineTileChip(
                       icon: Icons.medication_outlined,
                       label: '${med.dosage} Tablet',
                       color: AppColors.primary,
                       surface: AppColors.primarySurface,
                     ),
-                    _Chip(
+                    MedicineTileChip(
                       icon: Icons.calendar_today_outlined,
                       label: '${med.duration} ${med.durationUnit}',
                       color: AppColors.confirmed,
                       surface: AppColors.confirmedSurface,
                     ),
-                    _Chip(
+                    MedicineTileChip(
                       icon: Icons.repeat_rounded,
                       label: med.repeat,
                       color: AppColors.completed,
                       surface: AppColors.completedSurface,
                     ),
-                    _Chip(
+                    MedicineTileChip(
                       icon: Icons.wb_sunny_outlined,
                       label: med.timeOfDay,
                       color: AppColors.pending,
                       surface: AppColors.pendingSurface,
                     ),
-                    _Chip(
+                    MedicineTileChip(
                       icon: Icons.restaurant_outlined,
                       label: med.beTaken,
                       color: AppColors.cancelled,
@@ -111,42 +112,3 @@ class MedicineTile extends StatelessWidget {
   }
 }
 
-class _Chip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final Color surface;
-
-  const _Chip({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.surface,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(
-        color: surface,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 12, color: color),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

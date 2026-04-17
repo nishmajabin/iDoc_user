@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/appointment_model.dart';
 import 'package:idoc_user/data/models/user_model.dart';
 import 'package:idoc_user/data/repostories/user_chat_repository.dart';
-import 'package:idoc_user/presentation/screens/chat/user_chat_screen.dart';
+import 'package:idoc_user/presentation/screens/chat/user_chat/screen/user_chat_screen.dart';
 
 /// Drop this on any appointment detail screen.
 /// Handles the "waiting" case where the doctor hasn't opened chat yet —
@@ -97,7 +98,7 @@ class _PatientChatButtonState extends State<PatientChatButton> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF0077B6).withOpacity(0.35),
+              color: AppColors.primary.withValues(alpha: 0.35),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
@@ -110,7 +111,7 @@ class _PatientChatButtonState extends State<PatientChatButton> {
                   height: 22,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
                 ),
               )
@@ -119,7 +120,7 @@ class _PatientChatButtonState extends State<PatientChatButton> {
                 children: [
                   const Icon(
                     Icons.chat_bubble_outline_rounded,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                     size: 22,
                   ),
                   const SizedBox(width: 10),
@@ -128,7 +129,7 @@ class _PatientChatButtonState extends State<PatientChatButton> {
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppColors.backgroundColor,
                       letterSpacing: 0.3,
                     ),
                   ),

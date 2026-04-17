@@ -1,7 +1,7 @@
 // lib/presentation/screens/available_specialists/widgets/filter_button.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctors/doctor_state.dart';
 import 'package:idoc_user/presentation/screens/available_specialists/widgets/doctor_filter_bottom_sheet.dart';
@@ -27,7 +27,7 @@ class FilterButton extends StatelessWidget {
               Material(
                 color: hasActiveFilters
                     ? AppColors.primaryColor
-                    : Colors.white,
+                    : AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(12),
                 elevation: hasActiveFilters ? 2 : 0,
                 child: InkWell(
@@ -38,7 +38,7 @@ class FilterButton extends StatelessWidget {
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: AppColors.transparentColor,
                       builder: (bottomSheetContext) => BlocProvider.value(
                         // Provide the existing DoctorBloc to the bottom sheet
                         value: doctorBloc,
@@ -57,7 +57,7 @@ class FilterButton extends StatelessWidget {
                       border: Border.all(
                         color: hasActiveFilters
                             ? AppColors.primaryColor
-                            : Colors.grey[300]!,
+                            : AppColors.lightText,
                         width: hasActiveFilters ? 0 : 1,
                       ),
                     ),
@@ -67,8 +67,8 @@ class FilterButton extends StatelessWidget {
                         Icon(
                           Icons.tune,
                           color: hasActiveFilters
-                              ? Colors.white
-                              : Colors.grey[700],
+                              ? AppColors.backgroundColor
+                              : AppColors.lightTextColor,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
@@ -76,8 +76,8 @@ class FilterButton extends StatelessWidget {
                           'Filters',
                           style: TextStyle(
                             color: hasActiveFilters
-                                ? Colors.white
-                                : Colors.grey[700],
+                                ? AppColors.backgroundColor
+                                : AppColors.lightTextColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
@@ -94,9 +94,9 @@ class FilterButton extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: AppColors.errorBgColor,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: AppColors.backgroundColor, width: 2),
                     ),
                     constraints: const BoxConstraints(
                       minWidth: 20,
@@ -106,7 +106,7 @@ class FilterButton extends StatelessWidget {
                       child: Text(
                         '$filterCount',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.backgroundColor,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),

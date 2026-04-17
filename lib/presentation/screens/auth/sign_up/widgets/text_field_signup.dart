@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class CustomTextInputField extends StatelessWidget {
   final String hintText;
@@ -26,8 +26,8 @@ class CustomTextInputField extends StatelessWidget {
     this.autoValidateMode,
     this.labelText,
     this.validator,
-    this.backgroundColor = const Color(0xFFF7FAFF),
-    this.borderColor = const Color(0xFF052C40),
+    this.backgroundColor = AppColors.textFieldBg,
+    this.borderColor = AppColors.primaryColor,
     this.borderWidth = 1.5,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
@@ -60,12 +60,12 @@ class CustomTextInputField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: GoogleFonts.poppins(
-            color: const Color.fromARGB(255, 62, 62, 62),
+            color: AppColors.lightTextColor2,
             fontWeight: FontWeight.w400,
           ),
           hintText: hintText,
-          hintStyle: const TextStyle(color: Color(0xFF052C40), fontSize: 16),
-          prefixIcon: Icon(prefixIcon, color: const Color(0xFF052C40)),
+          hintStyle: const TextStyle(color:AppColors.primaryColor, fontSize: 16),
+          prefixIcon: Icon(prefixIcon, color: AppColors.primaryColor),
           suffixIcon:
               isPassword
                   ? InkWell(

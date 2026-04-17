@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/doctor_detail_screen.dart';
 
 class SpecialistsGridCard extends StatelessWidget {
@@ -20,7 +20,7 @@ class SpecialistsGridCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -50,18 +50,18 @@ class SpecialistsGridCard extends StatelessWidget {
         width: double.infinity,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
-          color: const Color(0xFFEEF5FF),
+          color: AppColors.confirmedSurface,
           child: const Center(
             child: CircularProgressIndicator(
               strokeWidth: 1.5,
-              color: Color(0xFF0077B6),
+              color: AppColors.primary,
             ),
           ),
         ),
         errorWidget: (context, url, error) => Container(
-          color: const Color(0xFFEEF5FF),
+          color: AppColors.backgroundColor,
           child: const Center(
-            child: Icon(Icons.person_rounded, size: 44, color: Color(0xFFB0C8E0)),
+            child: Icon(Icons.person_rounded, size: 44, color: AppColors.primaryLight),
           ),
         ),
       ),
@@ -72,7 +72,7 @@ class SpecialistsGridCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
       ),
       child: Column(
@@ -95,7 +95,7 @@ class SpecialistsGridCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
             decoration: BoxDecoration(
-              color: const Color(0xFFE8F4FD),
+              color: AppColors.confirmedSurface,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -105,7 +105,7 @@ class SpecialistsGridCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 9.5,
-                color: const Color(0xFF0077B6),
+                color: AppColors.primary,
                 fontWeight: FontWeight.w500,
               ),
             ),

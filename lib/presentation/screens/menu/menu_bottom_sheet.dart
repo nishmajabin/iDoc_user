@@ -7,12 +7,12 @@ import 'package:idoc_user/logic/blocs/auth/log_out/logout_event.dart';
 import 'package:idoc_user/logic/blocs/auth/log_out/logout_state.dart';
 import 'package:idoc_user/logic/blocs/settings/settings_bloc.dart';
 import 'package:idoc_user/presentation/screens/auth/sign_in/sign_in_screen.dart';
-import 'package:idoc_user/presentation/screens/menu/my_appointment/my_appointment_screen.dart';
-import 'package:idoc_user/presentation/screens/menu/settings/settings_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/my_appointment/screen/my_appointment_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/settings/screens/settings_screen.dart';
 import 'package:idoc_user/presentation/screens/menu/widgets/logout_dialog.dart';
 import 'package:idoc_user/presentation/screens/menu/widgets/menu_divider.dart';
 import 'package:idoc_user/presentation/screens/menu/widgets/menu_item.dart';
-import 'package:idoc_user/presentation/screens/profile/profile_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/profile/screens/profile_screen.dart';
 
 class MenuPanel extends StatelessWidget {
   final VoidCallback onClose;

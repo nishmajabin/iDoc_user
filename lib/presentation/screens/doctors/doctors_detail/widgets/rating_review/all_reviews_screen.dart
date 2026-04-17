@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/rating_model.dart';
 import 'package:idoc_user/logic/blocs/doctor_rating/doctor_rating_bloc.dart';
 import 'package:idoc_user/logic/blocs/doctor_rating/doctor_rating_event.dart';

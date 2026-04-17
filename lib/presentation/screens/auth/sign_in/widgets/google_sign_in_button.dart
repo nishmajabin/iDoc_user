@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -15,11 +16,11 @@ class GoogleSignInButton extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: isDisabled ? null : onPressed,
       icon: Image.asset('assets/images/google.png', height: 24),
-      label: const Text(
+      label:  Text(
         'Sign up with Google',
         style: TextStyle(
           fontSize: 16,
-          color: Color(0xFF333333),
+          color: AppColors.signUpText,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -28,8 +29,8 @@ class GoogleSignInButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(40.0),
         ),
-        side: const BorderSide(
-          color: Color(0xFF052C40),
+        side:  BorderSide(
+          color: AppColors.signUpBorder,
           width: 0.8,
         ),
       ),

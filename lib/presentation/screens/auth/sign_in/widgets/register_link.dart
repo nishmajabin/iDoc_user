@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class RegisterLink extends StatelessWidget {
   final VoidCallback onTap;
@@ -19,7 +19,7 @@ class RegisterLink extends StatelessWidget {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF555555),
+            color: AppColors.lightTextColor,
           ),
           children: [
             TextSpan(

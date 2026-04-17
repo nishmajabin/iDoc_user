@@ -9,7 +9,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   final PaymentService _paymentService;
   final AppointmentService _appointmentService;
 
-  // ✅ Expose paymentService so screens can initialize Razorpay
+  //  Expose paymentService so screens can initialize Razorpay
   PaymentService get paymentService => _paymentService;
 
   // Store appointment data temporarily during payment flow

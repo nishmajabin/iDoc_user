@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class StyledButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -24,7 +24,7 @@ class StyledButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(50.0),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0D72A6).withValues(alpha: 0.5),
+            color: AppColors.signUpgradient2.withValues(alpha: 0.5),
             spreadRadius: 2,
             blurRadius: 4,
             offset: const Offset(0, 3),
@@ -34,15 +34,15 @@ class StyledButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF052C40),
+          backgroundColor: AppColors.primaryColor,
           elevation: 0,
-          shadowColor: Colors.transparent,
-          foregroundColor: Colors.white,
+          shadowColor: AppColors.transparentColor,
+          foregroundColor: AppColors.backgroundColor,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50.0),
             side: const BorderSide(
-              color: Color(0xFF6AD2FF),
+              color: AppColors.signInBorder,
               width: 4,
             ),
           ),
@@ -53,7 +53,7 @@ class StyledButton extends StatelessWidget {
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.backgroundColor),
                   strokeWidth: 1,
                 ),
               )

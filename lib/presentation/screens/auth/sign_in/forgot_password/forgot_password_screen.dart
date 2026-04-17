@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_event.dart';
 import 'package:idoc_user/logic/blocs/forgot_password/forgot_password_state.dart';
@@ -15,14 +16,14 @@ class ForgotPasswordScreen extends StatelessWidget {
     final emailController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE8F4F8),
+      backgroundColor: AppColors.forgetPdBg,
       body: BlocListener<ForgotPasswordBloc, ForgotPasswordState>(
         listener: (context, state) {
           if (state is ForgotPasswordSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.successBgColor,
                 duration: const Duration(seconds: 3),
               ),
             );
@@ -33,7 +34,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.errorBgColor,
                 duration: const Duration(seconds: 3),
               ),
             );
@@ -88,7 +89,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: Color(0xFF2C3E50),
+        color: AppColors.backBtnIconColor,
         letterSpacing: 1.2,
       ),
     );
@@ -101,13 +102,13 @@ class ForgotPasswordScreen extends StatelessWidget {
         Text(
           'Please Enter Your Register\nemail',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 15, color: Color(0xFF6B7280), height: 1.5),
+          style: TextStyle(fontSize: 15, color: AppColors.subtitleColor, height: 1.5),
         ),
         SizedBox(height: 8),
         Text(
           'To Receive a Verification Code',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+          style: TextStyle(fontSize: 14, color: AppColors.subtitleColor),
         ),
       ],
     );

@@ -1,7 +1,7 @@
 // lib/presentation/screens/home/widgets/category_card.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 Widget buildCategoryCard(String imageUrl, String label, {VoidCallback? onTap}) {
   return GestureDetector(

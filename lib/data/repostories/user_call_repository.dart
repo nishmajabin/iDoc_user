@@ -153,7 +153,7 @@ class UserCallRepository {
       controller: VideoViewController.remote(
         rtcEngine: _engine!,
         canvas: VideoCanvas(
-          uid: remoteUid,
+          uid: remoteUid, 
           setupMode: VideoViewSetupMode.videoViewSetupReplace,
           renderMode: RenderModeType.renderModeHidden,
         ),

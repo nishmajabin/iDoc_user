@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
-import 'package:idoc_user/presentation/screens/appointment/add_patient_detail_screen.dart';
+import 'package:idoc_user/core/theme/color.dart';
+import 'package:idoc_user/presentation/screens/appointment/add_patient/screen/add_patient_detail_screen.dart';
 
 class BookAppointmentButton extends StatelessWidget {
   final String doctorId;
@@ -47,7 +47,7 @@ class BookAppointmentButton extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PatientDetailsScreen(
+        builder: (context) => AddPatientDetailsScreen(
           doctorId: doctorId,
           doctorName: doctorName,
           doctorSpecialist: doctorSpecialist,

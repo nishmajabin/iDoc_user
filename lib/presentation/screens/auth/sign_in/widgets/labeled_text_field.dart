@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class LabeledTextField extends StatelessWidget {
   final String label;
@@ -28,8 +28,8 @@ class LabeledTextField extends StatelessWidget {
     this.autoValidateMode,
     this.labelText,
     this.validator,
-    this.backgroundColor = Colors.white,
-    this.borderColor = Colors.transparent,
+    this.backgroundColor = AppColors.backgroundColor,
+    this.borderColor = AppColors.transparentColor,
     this.borderWidth = 0.9,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
@@ -59,7 +59,7 @@ class LabeledTextField extends StatelessWidget {
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 3,
-                        color: Colors.black.withValues(alpha: 0.25),
+                        color: AppColors.shadowDark.withValues(alpha: 0.25),
                         offset: const Offset(3, 4),
                       ),
                     ],
@@ -73,15 +73,15 @@ class LabeledTextField extends StatelessWidget {
             decoration: InputDecoration(
               labelText: labelText,
               labelStyle: GoogleFonts.poppins(
-                color: const Color.fromARGB(255, 62, 62, 62),
+                color: AppColors.lightTextColor2,
                 fontWeight: FontWeight.w400,
               ),
               hintText: hintText,
-              hintStyle: const TextStyle(
-                color: Color(0xFF052C40),
+              hintStyle:  TextStyle(
+                color: AppColors.primaryColor,
                 fontSize: 16,
               ),
-              prefixIcon: Icon(prefixIcon, color: const Color(0xFF052C40)),
+              prefixIcon: Icon(prefixIcon, color: AppColors.primaryColor),
               suffixIcon:
                   isPassword
                       ? InkWell(

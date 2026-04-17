@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/doctor_model.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/book_appointment_button.dart';
 import 'package:idoc_user/presentation/screens/doctors/doctors_detail/widgets/doctor_about_section.dart';

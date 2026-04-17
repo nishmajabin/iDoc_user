@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idoc_user/core/constants/color.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class EmptyPrescriptionView extends StatelessWidget {
   const EmptyPrescriptionView({super.key});

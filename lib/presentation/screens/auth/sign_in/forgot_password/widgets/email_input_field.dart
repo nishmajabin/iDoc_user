@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idoc_user/core/theme/color.dart';
 
 class EmailInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -20,17 +21,17 @@ class EmailInputField extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF2C3E50),
+            color: AppColors.backBtnIconColor,
           ),
         ),
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: AppColors.shadowDark.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -43,14 +44,14 @@ class EmailInputField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: 'Email',
               hintStyle: TextStyle(
-                color: const Color(0xFF6B7280).withValues(alpha: 0.5),
+                color: AppColors.lightTextColor.withValues(alpha: 0.5),
                 fontSize: 15,
               ),
               prefixIcon: const Padding(
                 padding: EdgeInsets.all(12.0),
                 child: Icon(
                   Icons.email_outlined,
-                  color: Color(0xFF6B7280),
+                  color: AppColors.lightTextColor,
                   size: 22,
                 ),
               ),
@@ -63,7 +64,7 @@ class EmailInputField extends StatelessWidget {
                 vertical: 16,
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: AppColors.backgroundColor,
             ),
           ),
         ),

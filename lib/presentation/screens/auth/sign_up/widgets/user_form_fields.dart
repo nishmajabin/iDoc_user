@@ -29,7 +29,7 @@ class UserFormFields extends StatelessWidget {
       children: [
         CustomTextInputField(
           controller: firstNameController,
-          hintText: 'First Namne',
+          hintText: 'First Name',
           labelText: 'First Name',
           prefixIcon: CupertinoIcons.person,
           keyboardType: TextInputType.name,

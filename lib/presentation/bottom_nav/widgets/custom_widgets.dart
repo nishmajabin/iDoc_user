@@ -1,7 +1,8 @@
  import 'package:flutter/material.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/user_model.dart';
-import 'package:idoc_user/presentation/screens/available_specialists/available_specialists_screen.dart';
-import 'package:idoc_user/presentation/screens/home/home_screen.dart';
+import 'package:idoc_user/presentation/screens/available_specialists/screen/available_specialists_screen.dart';
+import 'package:idoc_user/presentation/screens/home/screen/home_screen.dart';
 
   Widget buildBody(int currentIndex, UserModel user) {
    
@@ -26,14 +27,14 @@ import 'package:idoc_user/presentation/screens/home/home_screen.dart';
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.notifications_none, size: 80, color: Colors.grey[400]),
+          Icon(Icons.notifications_none, size: 80, color: AppColors.disableColor),
           const SizedBox(height: 16),
           Text(
             'Notifications',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.normalTextColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -55,14 +56,14 @@ import 'package:idoc_user/presentation/screens/home/home_screen.dart';
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.person, size: 80, color: Colors.grey[400]),
+          Icon(Icons.person, size: 80, color: AppColors.disableColor),
           const SizedBox(height: 16),
           Text(
             'Your Profile',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.normalTextColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -70,7 +71,7 @@ import 'package:idoc_user/presentation/screens/home/home_screen.dart';
             'Manage your account settings',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[600],
+              color: AppColors.lightTextColor,
             ),
           ),
         ],

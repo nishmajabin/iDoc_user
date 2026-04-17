@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:idoc_user/data/models/medical_chat_message.dart';
 import 'package:idoc_user/data/services/ai_chat/chat_api_service.dart';
 import 'package:idoc_user/data/services/ai_chat/medical_api_exception.dart';
 import 'package:idoc_user/data/services/ai_chat/medical_system_prompt.dart';
-import 'package:idoc_user/presentation/screens/ai_chat_bot/chat_message.dart';
 
 /// OpenRouter API service — **fallback** AI provider.
 ///

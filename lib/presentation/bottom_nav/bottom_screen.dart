@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:idoc_user/core/theme/color.dart';
 import 'package:idoc_user/data/models/user_model.dart';
 import 'package:idoc_user/logic/blocs/auth/log_out/logout_bloc.dart';
 import 'package:idoc_user/logic/blocs/auth/log_out/logout_state.dart';
@@ -8,11 +9,11 @@ import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_event.dart';
 import 'package:idoc_user/logic/blocs/bottom_nav/bottom_nav_state.dart';
 import 'package:idoc_user/presentation/bottom_nav/bottom_nav.dart';
 import 'package:idoc_user/presentation/screens/auth/sign_in/sign_in_screen.dart';
-import 'package:idoc_user/presentation/screens/available_specialists/available_specialists_screen.dart';
-import 'package:idoc_user/presentation/screens/home/home_screen.dart';
+import 'package:idoc_user/presentation/screens/available_specialists/screen/available_specialists_screen.dart';
+import 'package:idoc_user/presentation/screens/home/screen/home_screen.dart';
 import 'package:idoc_user/presentation/screens/menu/menu_bottom_sheet.dart';
-import 'package:idoc_user/presentation/screens/notification/notification_screen.dart';
-import 'package:idoc_user/presentation/screens/profile/profile_screen.dart';
+import 'package:idoc_user/presentation/screens/notification/screen/notification_screen.dart';
+import 'package:idoc_user/presentation/screens/menu/profile/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class BottomScreen extends StatelessWidget {
@@ -35,7 +36,7 @@ class BottomScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.green,
+              backgroundColor: AppColors.successBgColor,
               duration: const Duration(seconds: 2),
             ),
           );
@@ -57,7 +58,7 @@ class BottomScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColors.errorBgColor,
               duration: const Duration(seconds: 3),
             ),
           );
@@ -66,7 +67,7 @@ class BottomScreen extends StatelessWidget {
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: const Color(0xFFE6EFF9),
+            backgroundColor: AppColors.bottomNavBgColor,
             body: Stack(
               children: [
                 _buildBody(
@@ -83,7 +84,7 @@ class BottomScreen extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      color: Colors.black.withValues(alpha: 0.3),
+                      color: AppColors.shadowDark.withValues(alpha: 0.3),
                     ),
                   ),
 
